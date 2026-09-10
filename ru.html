@@ -97,6 +97,7 @@
     <button id="mz-cart-close" type="button">×</button>
   </div>
   <div id="mz-cart-list"></div>
+  <div id="mz-delivery-row" class="cart-total-row" hidden><span>Доставка<br><small id="mz-delivery-note" style="font-weight:400;color:var(--muted);"></small></span><span id="mz-delivery-fee">0</span></div>
   <div class="cart-total-row"><span>Итого</span><span><span id="mz-cart-total">0.00</span> <span id="mz-cart-currency"></span></span></div>
   <textarea id="mz-address" placeholder="Адрес доставки"></textarea>
   <button type="button" id="mz-pick-on-map" class="mz-map-btn">📍 Указать на карте</button>
@@ -122,6 +123,9 @@ window.MZ_CITIES = {
     addressPlaceholder: "Адрес доставки в Батуми",
     mapCenter: [41.6168, 41.6367],
     mapBBox: [41.55, 41.68, 41.70, 41.55],
+    freeDeliveryMinCount: 3,
+    freeDeliveryMinTotal: 42,
+    deliveryFee: 5,
     messengers: [
       {type:"whatsapp", number:"995593482218", label:"WhatsApp"},
       {type:"telegram", username:"microzelen_batumi_DaNangvn", label:"Telegram"},
@@ -177,6 +181,10 @@ window.MZ_CART_TEXT = {
   inCart: "В корзине",
   payment: "Оплата",
   copy: "Скопировать",
+  subtotal: "Товары",
+  delivery: "Доставка",
+  freeDelivery: "Бесплатно",
+  deliveryNote: "Бесплатно от {count} лотков или {total}",
   copied: "Скопировано",
   checkoutWhatsapp: "Оформить заказ в WhatsApp",
   checkoutZalo: "Оформить заказ в Zalo",

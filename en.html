@@ -97,6 +97,7 @@
     <button id="mz-cart-close" type="button">×</button>
   </div>
   <div id="mz-cart-list"></div>
+  <div id="mz-delivery-row" class="cart-total-row" hidden><span>Delivery<br><small id="mz-delivery-note" style="font-weight:400;color:var(--muted);"></small></span><span id="mz-delivery-fee">0</span></div>
   <div class="cart-total-row"><span>Total</span><span><span id="mz-cart-total">0.00</span> <span id="mz-cart-currency"></span></span></div>
   <textarea id="mz-address" placeholder="Delivery address"></textarea>
   <button type="button" id="mz-pick-on-map" class="mz-map-btn">📍 Pick on map</button>
@@ -123,6 +124,9 @@ window.MZ_CITIES = {
     addressPlaceholder: "Delivery address in Batumi",
     mapCenter: [41.6168, 41.6367],
     mapBBox: [41.55, 41.68, 41.70, 41.55],
+    freeDeliveryMinCount: 3,
+    freeDeliveryMinTotal: 42,
+    deliveryFee: 5,
     messengers: [
       {type:"whatsapp", number:"995593482218", label:"WhatsApp"},
       {type:"telegram", username:"microzelen_batumi_DaNangvn", label:"Telegram"},
@@ -179,6 +183,10 @@ window.MZ_CART_TEXT = {
   companyId: "Company ID",
   payment: "Payment",
   copy: "Copy",
+  subtotal: "Items",
+  delivery: "Delivery",
+  freeDelivery: "Free",
+  deliveryNote: "Free from {count} trays or {total}",
   copied: "Copied",
   checkoutWhatsapp: "Send order via WhatsApp",
   checkoutZalo: "Send order via Zalo",

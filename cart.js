@@ -9,6 +9,8 @@
   // is in, so the owner reads every order the same way.
   var RU = {
     orderTitle: "Новый заказ Microzelen",
+    subtotal: "Товары",
+    delivery: "Доставка",
     total: "Итого",
     address: "Адрес доставки",
     payment: "Оплата",
@@ -94,6 +96,19 @@
     return Number(n).toLocaleString(undefined, { maximumFractionDigits: 2 });
   }
 
+  function deliveryFee() {
+    var c = city();
+    if (!c.deliveryFee || cartCount() === 0) return 0;
+    var meetsCount = c.freeDeliveryMinCount && cartCount() >= c.freeDeliveryMinCount;
+    var meetsTotal = c.freeDeliveryMinTotal && cartTotal() >= c.freeDeliveryMinTotal;
+    if (meetsCount || meetsTotal) return 0;
+    return c.deliveryFee;
+  }
+
+  function grandTotal() {
+    return cartTotal() + deliveryFee();
+  }
+
   function renderBadge() {
     var badge = document.getElementById("mz-cart-count");
     if (badge) badge.textContent = cartCount();
@@ -147,9 +162,25 @@
         list.appendChild(row);
       });
     }
-    if (totalEl) totalEl.textContent = fmt(cartTotal());
+    if (totalEl) totalEl.textContent = fmt(grandTotal());
     var currencyEl = document.getElementById("mz-cart-currency");
     if (currencyEl) currencyEl.textContent = city().currency || "";
+
+    var fee = deliveryFee();
+    var deliveryRow = document.getElementById("mz-delivery-row");
+    if (deliveryRow) {
+      var c = city();
+      deliveryRow.hidden = !c.deliveryFee || cartCount() === 0;
+      var feeEl = document.getElementById("mz-delivery-fee");
+      if (feeEl) feeEl.textContent = fee > 0 ? fmt(fee) + " " + c.currency : (t.freeDelivery || "Free");
+      var noteEl = document.getElementById("mz-delivery-note");
+      if (noteEl && c.freeDeliveryMinCount && c.freeDeliveryMinTotal) {
+        noteEl.textContent = (t.deliveryNote || "Free from {count} trays or {total}")
+          .replace("{count}", c.freeDeliveryMinCount)
+          .replace("{total}", fmt(c.freeDeliveryMinTotal) + " " + c.currency);
+      }
+    }
+
     renderMessengerSection();
     renderPaymentSection();
     updateCheckoutLabel();
@@ -486,7 +517,12 @@
       lines.push("- " + name + " x " + cart[id] + " " + unit + " = " + fmt(p.price * cart[id]));
     });
     lines.push("");
-    lines.push(biLabel("total") + ": " + fmt(cartTotal()) + " " + city().currency);
+    var fee = deliveryFee();
+    if (fee > 0) {
+      lines.push(biLabel("subtotal") + ": " + fmt(cartTotal()) + " " + city().currency);
+      lines.push(biLabel("delivery") + ": " + fmt(fee) + " " + city().currency);
+    }
+    lines.push(biLabel("total") + ": " + fmt(grandTotal()) + " " + city().currency);
     lines.push("");
     lines.push(biLabel("address") + ": " + address);
     var companyIdInput = document.getElementById("mz-company-id");
