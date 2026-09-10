@@ -150,8 +150,45 @@
     if (totalEl) totalEl.textContent = fmt(cartTotal());
     var currencyEl = document.getElementById("mz-cart-currency");
     if (currencyEl) currencyEl.textContent = city().currency || "";
+    renderMessengerSection();
     renderPaymentSection();
     updateCheckoutLabel();
+  }
+
+  function cityMessengers() {
+    var c = city();
+    if (c.messengers && c.messengers.length) return c.messengers;
+    if (c.messenger) return [c.messenger];
+    return [];
+  }
+
+  function renderMessengerSection() {
+    var wrap = document.getElementById("mz-messenger-section");
+    var list = document.getElementById("mz-messenger-list");
+    if (!wrap || !list) return;
+    var messengers = cityMessengers();
+    if (messengers.length <= 1) {
+      wrap.hidden = true;
+      return;
+    }
+    wrap.hidden = false;
+    list.innerHTML = "";
+    messengers.forEach(function (m, i) {
+      var row = document.createElement("label");
+      row.className = "mz-messenger-row";
+      row.innerHTML =
+        '<input type="radio" name="mz-messenger" value="' + i + '"' + (i === 0 ? " checked" : "") + ">" +
+        "<span>" + (m.label || m.type) + "</span>";
+      list.appendChild(row);
+    });
+  }
+
+  function selectedMessenger() {
+    var messengers = cityMessengers();
+    if (!messengers.length) return null;
+    var checked = document.querySelector('input[name="mz-messenger"]:checked');
+    if (!checked) return messengers[0];
+    return messengers[parseInt(checked.value, 10)] || messengers[0];
   }
 
   function renderPaymentSection() {
@@ -187,8 +224,10 @@
   function updateCheckoutLabel() {
     var btn = document.getElementById("mz-checkout-btn");
     if (!btn) return;
-    var m = city().messenger;
+    var m = selectedMessenger();
+    if (!m) { btn.textContent = t.checkoutWhatsapp || "Checkout"; return; }
     if (m.type === "zalo") btn.textContent = t.checkoutZalo || t.checkoutWhatsapp || "Checkout";
+    else if (m.type === "telegram") btn.textContent = t.checkoutTelegram || t.checkoutWhatsapp || "Checkout";
     else btn.textContent = t.checkoutWhatsapp || "Checkout";
   }
 
@@ -375,6 +414,12 @@
     closeMapPicker();
   }
 
+  document.addEventListener("change", function (e) {
+    if (e.target && e.target.name === "mz-messenger") {
+      updateCheckoutLabel();
+    }
+  });
+
   document.addEventListener("input", function (e) {
     if (e.target && e.target.id === "mz-map-search") {
       clearTimeout(searchDebounce);
@@ -473,6 +518,45 @@
     }, 2500);
   }
 
+  // zalo.me/{phone} is a long-standing, unfixed Zalo bug ("account does not
+  // exist") for many numbers, so we never rely on that link. Instead: copy
+  // the order text, then show the seller's real in-app QR code to scan.
+  function zaloModalEl() {
+    var el = document.getElementById("mz-zalo-modal");
+    if (el) return el;
+    el = document.createElement("div");
+    el.id = "mz-zalo-modal";
+    el.className = "mz-simple-modal";
+    el.innerHTML =
+      '<div class="mz-simple-modal-inner">' +
+        '<button type="button" id="mz-zalo-close" class="mz-simple-modal-close">×</button>' +
+        '<p>' + (t.zaloScan || "Scan this QR code in the Zalo app to open the chat, then paste your order (already copied).") + "</p>" +
+        '<img src="' + (window.MZ_ZALO_QR || "") + '" alt="Zalo QR" class="mz-zalo-qr-img">' +
+      "</div>";
+    document.body.appendChild(el);
+    return el;
+  }
+
+  function openZaloModal() {
+    zaloModalEl().classList.add("open");
+  }
+
+  function closeZaloModal() {
+    var el = document.getElementById("mz-zalo-modal");
+    if (el) el.classList.remove("open");
+  }
+
+  function copyThenOpenZaloModal(text) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function () {
+        toast(t.zaloCopied || "Order text copied.");
+        openZaloModal();
+      }, openZaloModal);
+    } else {
+      openZaloModal();
+    }
+  }
+
   function submitOrder() {
     if (cartCount() === 0) return;
     var addressInput = document.getElementById("mz-address");
@@ -483,32 +567,38 @@
       return;
     }
     var text = buildOrderText(address);
-    var m = city().messenger;
+    var m = selectedMessenger();
+    if (!m) return;
 
     if (m.type === "whatsapp") {
       window.open("https://wa.me/" + m.number + "?text=" + encodeURIComponent(text), "_blank");
-    } else if (m.type === "zalo") {
-      // Open the tab synchronously, in the same call stack as the click, so
-      // mobile Safari still treats it as a user-initiated navigation even
-      // though the clipboard write below finishes asynchronously.
-      var win = window.open("about:blank", "_blank");
-      var target = "https://zalo.me/" + m.number;
-      var go = function () {
-        if (win) win.location.href = target;
-        else window.location.href = target;
-      };
+    } else if (m.type === "telegram") {
+      // Telegram has no prefill-text deep link for a regular chat/channel, so
+      // copy the text and open the chat the same popup-safe way as WhatsApp.
+      var win = window.open("https://t.me/" + m.username, "_blank");
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(text).then(function () {
-          toast(t.zaloCopied || "Order text copied — paste it into the Zalo chat that just opened.");
-          go();
-        }, go);
-      } else {
-        go();
+          toast(t.telegramCopied || "Order text copied — paste it into the Telegram chat that just opened.");
+        });
       }
+    } else if (m.type === "zalo") {
+      copyThenOpenZaloModal(text);
     }
   }
 
   document.addEventListener("click", function (e) {
+    if (e.target.closest("#mz-zalo-trigger")) {
+      openZaloModal();
+      return;
+    }
+    if (e.target.closest("#mz-zalo-close")) {
+      closeZaloModal();
+      return;
+    }
+    if (e.target.id === "mz-zalo-modal") {
+      closeZaloModal();
+      return;
+    }
     if (e.target.closest("#mz-pick-on-map")) {
       openMapPicker();
       return;

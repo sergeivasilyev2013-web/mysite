@@ -78,7 +78,7 @@
     <div class="contacts">
       <a href="https://wa.me/995593482218" target="_blank" rel="noopener">WhatsApp</a>
       <a href="https://t.me/microzelen_batumi_DaNangvn" target="_blank" rel="noopener">Telegram</a>
-      <a href="https://zalo.me/84704711042" target="_blank" rel="noopener">Zalo</a>
+      <button type="button" id="mz-zalo-trigger" class="mz-zalo-link">Zalo</button>
       <a href="https://www.threads.com/@microzelen_batumi_danang" target="_blank" rel="noopener">Threads</a>
       <a href="https://www.instagram.com/microzelen_batumi_danang" target="_blank" rel="noopener">Instagram</a>
     </div>
@@ -97,6 +97,10 @@
   <textarea id="mz-address" placeholder="მიწოდების მისამართი ბათუმში"></textarea>
   <button type="button" id="mz-pick-on-map" class="mz-map-btn">📍 რუკაზე მითითება</button>
   <input id="mz-company-id" type="text" placeholder="საიდენტიფიკაციო კოდი (იურ. პირისთვის, არასავალდებულო)">
+  <div id="mz-messenger-section">
+    <p class="mz-payment-note"><strong>შეკვეთის გაგზავნის საშუალება:</strong></p>
+    <div id="mz-messenger-list"></div>
+  </div>
   <div id="mz-payment-section">
     <p class="mz-payment-note"><strong>გადახდა მხოლოდ უნაღდო. კურიერს გადახდა არ სჭირდება.</strong></p>
     <div id="mz-payment-list"></div>
@@ -106,6 +110,7 @@
 
 <script>
 window.MZ_DEFAULT_CITY = "batumi";
+window.MZ_ZALO_QR = "images/zalo-qr-danang.jpg";
 window.MZ_BILINGUAL_MESSAGE = true;
 window.MZ_CITIES = {
   batumi: {
@@ -114,7 +119,11 @@ window.MZ_CITIES = {
     addressPlaceholder: "მიწოდების მისამართი ბათუმში",
     mapCenter: [41.6168, 41.6367],
     mapBBox: [41.55, 41.68, 41.70, 41.55],
-    messenger: {type:"whatsapp", number:"995593482218"},
+    messengers: [
+      {type:"whatsapp", number:"995593482218", label:"WhatsApp"},
+      {type:"telegram", username:"microzelen_batumi_DaNangvn", label:"Telegram"},
+      {type:"zalo", number:"84704711042", label:"Zalo (QR)"}
+    ],
     payments: [
       {bank:"Credo", holder:"Shevchenko Natalia", iban:"GE39CD0360000037536628"},
       {bank:"Bank of Georgia (BOG)", holder:"Sergei Vasilev", iban:"GE46BG0000000533441103"},
@@ -150,6 +159,8 @@ window.MZ_CART_TEXT = {
   copy: "კოპირება",
   copied: "დაკოპირდა",
   checkoutWhatsapp: "შეკვეთის გაგზავნა WhatsApp-ზე",
+  checkoutTelegram: "შეკვეთის გაგზავნა Telegram-ზე",
+  telegramCopied: "შეკვეთის ტექსტი დაკოპირდა — ჩასვით გახსნილ Telegram ჩატში.",
   searchStreet: "ქუჩის ძებნა",
   confirmLocation: "ამ მისამართის გამოყენება"
 };

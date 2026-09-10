@@ -29,7 +29,7 @@
       <span>🇻🇳 Đà Nẵng</span>
     </div>
     <div class="cta">
-      <a class="btn primary" href="https://zalo.me/84704711042" target="_blank" rel="noopener">Nhắn tin Zalo</a>
+      <button type="button" id="mz-zalo-trigger" class="btn primary">Nhắn tin Zalo (QR)</button>
       <a class="btn secondary" href="https://wa.me/995593482218" target="_blank" rel="noopener">WhatsApp</a>
     </div>
   </div>
@@ -77,7 +77,7 @@
 <footer class="site">
   <div class="wrap">
     <div class="contacts">
-      <a href="https://zalo.me/84704711042" target="_blank" rel="noopener">Zalo</a>
+      <button type="button" id="mz-zalo-trigger" class="mz-zalo-link">Zalo</button>
       <a href="https://wa.me/995593482218" target="_blank" rel="noopener">WhatsApp</a>
       <a href="https://t.me/microzelen_batumi_DaNangvn" target="_blank" rel="noopener">Telegram</a>
       <a href="https://www.threads.com/@microzelen_batumi_danang" target="_blank" rel="noopener">Threads</a>
@@ -98,6 +98,10 @@
   <textarea id="mz-address" placeholder="Địa chỉ giao hàng tại Đà Nẵng"></textarea>
   <button type="button" id="mz-pick-on-map" class="mz-map-btn">📍 Chọn trên bản đồ</button>
   <input id="mz-company-id" type="text" placeholder="Mã số doanh nghiệp (nếu là công ty, không bắt buộc)">
+  <div id="mz-messenger-section">
+    <p class="mz-payment-note"><strong>Gửi đơn hàng qua:</strong></p>
+    <div id="mz-messenger-list"></div>
+  </div>
   <div id="mz-payment-section">
     <p class="mz-payment-note"><strong>Chỉ thanh toán chuyển khoản. Không cần trả tiền cho người giao hàng.</strong></p>
     <div id="mz-payment-list"></div>
@@ -107,6 +111,7 @@
 
 <script>
 window.MZ_DEFAULT_CITY = "danang";
+window.MZ_ZALO_QR = "images/zalo-qr-danang.jpg";
 window.MZ_BILINGUAL_MESSAGE = true;
 window.MZ_CITIES = {
   danang: {
@@ -115,7 +120,11 @@ window.MZ_CITIES = {
     addressPlaceholder: "Địa chỉ giao hàng tại Đà Nẵng",
     mapCenter: [16.0544, 108.2022],
     mapBBox: [108.10, 16.15, 108.30, 15.95],
-    messenger: {type:"zalo", number:"84704711042"},
+    messengers: [
+      {type:"whatsapp", number:"995593482218", label:"WhatsApp"},
+      {type:"telegram", username:"microzelen_batumi_DaNangvn", label:"Telegram"},
+      {type:"zalo", number:"84704711042", label:"Zalo (QR)"}
+    ],
     payments: [
       {bank:"BIDV — PGD Đông Phan Thiết (VietQR)", holder:"VASILEV SERGEI", iban:"8808314124", qrImage:"images/vietqr-vasilev.jpg"}
     ],
@@ -137,6 +146,8 @@ window.MZ_CART_TEXT = {
   copy: "Sao chép",
   copied: "Đã sao chép",
   checkoutZalo: "Gửi đơn hàng qua Zalo",
+  checkoutTelegram: "Gửi đơn hàng qua Telegram",
+  telegramCopied: "Đã sao chép nội dung đơn hàng — dán vào khung chat Telegram vừa mở.",
   zaloCopied: "Đã sao chép nội dung đơn hàng — dán vào khung chat Zalo vừa mở.",
   searchStreet: "Tìm đường phố",
   confirmLocation: "Dùng địa chỉ này"
