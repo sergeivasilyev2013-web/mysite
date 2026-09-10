@@ -458,13 +458,28 @@
     return lines.join("\n");
   }
 
+  function toast(msg) {
+    var el = document.getElementById("mz-toast");
+    if (!el) {
+      el = document.createElement("div");
+      el.id = "mz-toast";
+      document.body.appendChild(el);
+    }
+    el.textContent = msg;
+    el.classList.add("show");
+    clearTimeout(el._hideTimer);
+    el._hideTimer = setTimeout(function () {
+      el.classList.remove("show");
+    }, 2500);
+  }
+
   function submitOrder() {
     if (cartCount() === 0) return;
     var addressInput = document.getElementById("mz-address");
     var address = addressInput ? addressInput.value.trim() : "";
     if (!address) {
       if (addressInput) addressInput.focus();
-      alert(t.addressRequired || "Please enter a delivery address");
+      toast(t.addressRequired || "Please enter a delivery address");
       return;
     }
     var text = buildOrderText(address);
@@ -473,15 +488,22 @@
     if (m.type === "whatsapp") {
       window.open("https://wa.me/" + m.number + "?text=" + encodeURIComponent(text), "_blank");
     } else if (m.type === "zalo") {
+      // Open the tab synchronously, in the same call stack as the click, so
+      // mobile Safari still treats it as a user-initiated navigation even
+      // though the clipboard write below finishes asynchronously.
+      var win = window.open("about:blank", "_blank");
+      var target = "https://zalo.me/" + m.number;
+      var go = function () {
+        if (win) win.location.href = target;
+        else window.location.href = target;
+      };
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(text).then(function () {
-          alert(t.zaloCopied || "Order text copied — paste it into the Zalo chat that just opened.");
-          window.open("https://zalo.me/" + m.number, "_blank");
-        }, function () {
-          window.open("https://zalo.me/" + m.number, "_blank");
-        });
+          toast(t.zaloCopied || "Order text copied — paste it into the Zalo chat that just opened.");
+          go();
+        }, go);
       } else {
-        window.open("https://zalo.me/" + m.number, "_blank");
+        go();
       }
     }
   }

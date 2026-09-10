@@ -566,6 +566,30 @@ section.catalog .price-note {
   cursor: not-allowed;
 }
 
+#mz-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 90px;
+  transform: translateX(-50%) translateY(20px);
+  background: var(--green-dark);
+  color: #fff;
+  padding: 12px 18px;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  max-width: min(320px, 85vw);
+  text-align: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  z-index: 200;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.2);
+}
+
+#mz-toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
 #mz-checkout-btn {
   width: 100%;
   background: var(--green);
