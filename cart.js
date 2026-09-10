@@ -237,9 +237,10 @@
       var row = document.createElement("label");
       row.className = "mz-payment-row";
       var qrHtml = p.qrImage ? '<br><img src="' + p.qrImage + '" alt="QR" class="mz-payment-qr">' : "";
+      var logoHtml = p.logo ? '<img src="' + p.logo + '" alt="" class="mz-bank-logo">' : "";
       row.innerHTML =
         '<input type="radio" name="mz-payment" value="' + i + '"' + (i === 0 ? " checked" : "") + ">" +
-        '<span><strong>' + p.bank + "</strong><br>" + p.holder + "<br><code>" + p.iban + "</code> " +
+        '<span><span class="mz-bank-name">' + logoHtml + '<strong>' + p.bank + "</strong></span><br>" + p.holder + "<br><code>" + p.iban + "</code> " +
         '<button type="button" class="mz-copy-iban" data-iban="' + p.iban + '">' + (t.copy || "Copy") + "</button>" + qrHtml + "</span>";
       list.appendChild(row);
     });
@@ -671,6 +672,15 @@
   }
 
   document.addEventListener("click", function (e) {
+    var cardToggle = e.target.closest("[data-card-toggle]");
+    if (cardToggle) {
+      var card = cardToggle.closest(".card");
+      if (card) {
+        var isOpen = card.classList.toggle("open");
+        cardToggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
+      }
+      return;
+    }
     if (e.target.closest("#mz-zalo-trigger")) {
       openZaloModal();
       return;

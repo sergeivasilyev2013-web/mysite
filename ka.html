@@ -39,19 +39,46 @@
   <div class="wrap">
     <div class="grid">
       <div class="card">
-        <div class="icon">🌱</div>
-        <h3>ცოცხალი, ფესვებზე</h3>
-        <p>არასდროს მოჭრილი მიწოდებამდე. ცოცხალი მწვანილი ინარჩუნებს გემოს, ფერსა და სიმტკიცეს რამდენიმე დღეს — მოჭრილი კარგავს მათ 24 საათში.</p>
+        <button type="button" class="card-head" data-card-toggle aria-expanded="false">
+          <span class="icon">🌱</span>
+          <span class="card-title">
+            <h3>ცოცხალი, ფესვებზე</h3>
+            <span class="card-teaser">როგორ ვაკეთებთ →</span>
+          </span>
+          <span class="card-arrow">›</span>
+        </button>
+        <div class="card-detail">
+          <div class="card-detail-img" aria-hidden="true">🖼</div>
+          <p>არასდროს მოჭრილი მიწოდებამდე. ცოცხალი მწვანილი ინარჩუნებს გემოს, ფერსა და სიმტკიცეს რამდენიმე დღეს — მოჭრილი კარგავს მათ 24 საათში.</p>
+        </div>
       </div>
       <div class="card">
-        <div class="icon">📄</div>
-        <h3>ლეგალურად, დოკუმენტურად</h3>
-        <p>ოფიციალური rs.ge ზედნადები ყოველ მიწოდებაზე. თქვენი შესყიდვები სუფთაა — შემოწმებისას კითხვები არ გექნებათ.</p>
+        <button type="button" class="card-head" data-card-toggle aria-expanded="false">
+          <span class="icon">📄</span>
+          <span class="card-title">
+            <h3>ლეგალურად, დოკუმენტურად</h3>
+            <span class="card-teaser">როგორ გამოიყურება დოკუმენტი →</span>
+          </span>
+          <span class="card-arrow">›</span>
+        </button>
+        <div class="card-detail">
+          <div class="card-detail-img" aria-hidden="true">🖼</div>
+          <p>ოფიციალური rs.ge ზედნადები ყოველ მიწოდებაზე. თქვენი შესყიდვები სუფთაა — შემოწმებისას კითხვები არ გექნებათ.</p>
+        </div>
       </div>
       <div class="card">
-        <div class="icon">🤝</div>
-        <h3>პირდაპირი B2B კონტრაქტი</h3>
-        <p>სტაბილური მოცულობა თქვენს გრაფიკზე მორგებული — არა ის, რაც მიწოდების აპლიკაციას შემთხვევით დარჩა საწყობში.</p>
+        <button type="button" class="card-head" data-card-toggle aria-expanded="false">
+          <span class="icon">🤝</span>
+          <span class="card-title">
+            <h3>პირდაპირი B2B კონტრაქტი</h3>
+            <span class="card-teaser">როგორ მუშაობს კონტრაქტი →</span>
+          </span>
+          <span class="card-arrow">›</span>
+        </button>
+        <div class="card-detail">
+          <div class="card-detail-img" aria-hidden="true">🖼</div>
+          <p>სტაბილური მოცულობა თქვენს გრაფიკზე მორგებული — არა ის, რაც მიწოდების აპლიკაციას შემთხვევით დარჩა საწყობში.</p>
+        </div>
       </div>
     </div>
   </div>
@@ -129,9 +156,9 @@ window.MZ_CITIES = {
       {type:"zalo", number:"84704611042", label:"Zalo (QR)"}
     ],
     payments: [
-      {bank:"Credo", holder:"Shevchenko Natalia", iban:"GE39CD0360000037536628"},
-      {bank:"Bank of Georgia (BOG)", holder:"Sergei Vasilev", iban:"GE46BG0000000533441103"},
-      {bank:"TBC", holder:"Sergei Vasilev", iban:"GE54TB7899145064400001"}
+      {bank:"Bank of Georgia (BOG)", holder:"Sergei Vasilev", iban:"GE46BG0000000533441103", logo:"images/bank-bog.jpg"},
+      {bank:"TBC", holder:"Sergei Vasilev", iban:"GE54TB7899145064400001", logo:"images/bank-tbc.jpg"},
+      {bank:"Credo", holder:"Shevchenko Natalia", iban:"GE39CD0360000037536628", logo:"images/bank-credo.jpg"}
     ],
     products: [
       {id:"pea", name:"მწვანე ბარდა", nameRu:"Зелёный горошек", unit:"ლანგარი", unitRu:"лоток", image:"images/pea.jpg", price:14},

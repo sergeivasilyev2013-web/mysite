@@ -39,19 +39,46 @@
   <div class="wrap">
     <div class="grid">
       <div class="card">
-        <div class="icon">🌱</div>
-        <h3>Living, roots on</h3>
-        <p>Never cut the day before delivery. Living greens hold flavor, color and crunch for days — cut greens lose them within 24 hours.</p>
+        <button type="button" class="card-head" data-card-toggle aria-expanded="false">
+          <span class="icon">🌱</span>
+          <span class="card-title">
+            <h3>Living, roots on</h3>
+            <span class="card-teaser">How it works →</span>
+          </span>
+          <span class="card-arrow">›</span>
+        </button>
+        <div class="card-detail">
+          <div class="card-detail-img" aria-hidden="true">🖼</div>
+          <p>Never cut the day before delivery. Living greens hold flavor, color and crunch for days — cut greens lose them within 24 hours.</p>
+        </div>
       </div>
       <div class="card">
-        <div class="icon">📄</div>
-        <h3>Legal, documented</h3>
-        <p>An official rs.ge invoice on every delivery. Your purchases stay clean — no questions at inspection.</p>
+        <button type="button" class="card-head" data-card-toggle aria-expanded="false">
+          <span class="icon">📄</span>
+          <span class="card-title">
+            <h3>Legal, documented</h3>
+            <span class="card-teaser">See the document →</span>
+          </span>
+          <span class="card-arrow">›</span>
+        </button>
+        <div class="card-detail">
+          <div class="card-detail-img" aria-hidden="true">🖼</div>
+          <p>An official rs.ge invoice on every delivery. Your purchases stay clean — no questions at inspection.</p>
+        </div>
       </div>
       <div class="card">
-        <div class="icon">🤝</div>
-        <h3>Direct B2B contract</h3>
-        <p>A steady volume on your schedule — not whatever a delivery app happened to have left.</p>
+        <button type="button" class="card-head" data-card-toggle aria-expanded="false">
+          <span class="icon">🤝</span>
+          <span class="card-title">
+            <h3>Direct B2B contract</h3>
+            <span class="card-teaser">How the contract works →</span>
+          </span>
+          <span class="card-arrow">›</span>
+        </button>
+        <div class="card-detail">
+          <div class="card-detail-img" aria-hidden="true">🖼</div>
+          <p>A steady volume on your schedule — not whatever a delivery app happened to have left.</p>
+        </div>
       </div>
     </div>
   </div>
@@ -133,9 +160,9 @@ window.MZ_CITIES = {
       {type:"zalo", number:"84704611042", label:"Zalo (QR)"}
     ],
     payments: [
-      {bank:"Credo", holder:"Shevchenko Natalia", iban:"GE39CD0360000037536628"},
-      {bank:"Bank of Georgia (BOG)", holder:"Sergei Vasilev", iban:"GE46BG0000000533441103"},
-      {bank:"TBC", holder:"Sergei Vasilev", iban:"GE54TB7899145064400001"}
+      {bank:"Bank of Georgia (BOG)", holder:"Sergei Vasilev", iban:"GE46BG0000000533441103", logo:"images/bank-bog.jpg"},
+      {bank:"TBC", holder:"Sergei Vasilev", iban:"GE54TB7899145064400001", logo:"images/bank-tbc.jpg"},
+      {bank:"Credo", holder:"Shevchenko Natalia", iban:"GE39CD0360000037536628", logo:"images/bank-credo.jpg"}
     ],
     products: [
       {id:"pea", name:"Green Pea Shoots", nameRu:"Зелёный горошек", unit:"tray", unitRu:"лоток", image:"images/pea.jpg", price:14},
