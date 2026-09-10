@@ -270,9 +270,11 @@
       var card = document.createElement("div");
       card.className = "product-card";
       var imgHtml = p.image ? '<img class="product-photo" src="' + p.image + '" alt="' + p.name + '" loading="lazy">' : "";
+      var descHtml = p.desc ? '<div class="desc">' + p.desc + "</div>" : "";
       card.innerHTML =
         imgHtml +
         '<div class="name">' + p.name + "</div>" +
+        descHtml +
         '<div class="price">' + fmt(p.price) + " " + city().currency + " / " + p.unit + "</div>" +
         '<div class="add-row">' +
           '<button type="button" class="add-btn" data-add-to-cart="' + p.id + '">' + (t.addToCart || "Add to cart") + "</button>" +

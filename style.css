@@ -290,6 +290,12 @@ section.catalog .price-note {
   font-weight: 600;
 }
 
+.product-card .desc {
+  font-size: 0.82rem;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
 .product-card .price {
   color: var(--green-dark);
   font-weight: 700;
