@@ -582,7 +582,23 @@
         });
       }
     } else if (m.type === "zalo") {
-      copyThenOpenZaloModal(text);
+      // Open the tab synchronously, in the same call stack as the click, so
+      // mobile Safari still treats it as a user-initiated navigation even
+      // though the clipboard write below finishes asynchronously.
+      var zwin = window.open("about:blank", "_blank");
+      var ztarget = "https://zalo.me/" + m.number;
+      var zgo = function () {
+        if (zwin) zwin.location.href = ztarget;
+        else window.location.href = ztarget;
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function () {
+          toast(t.zaloCopied || "Order text copied — paste it into the Zalo chat that just opened.");
+          zgo();
+        }, zgo);
+      } else {
+        zgo();
+      }
     }
   }
 
