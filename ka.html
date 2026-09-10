@@ -95,6 +95,7 @@
   <div id="mz-cart-list"></div>
   <div class="cart-total-row"><span>ჯამი</span><span><span id="mz-cart-total">0.00</span> <span id="mz-cart-currency"></span></span></div>
   <textarea id="mz-address" placeholder="მიწოდების მისამართი ბათუმში"></textarea>
+  <button type="button" id="mz-pick-on-map" class="mz-map-btn">📍 რუკაზე მითითება</button>
   <input id="mz-company-id" type="text" placeholder="საიდენტიფიკაციო კოდი (იურ. პირისთვის, არასავალდებულო)">
   <div id="mz-payment-section">
     <p class="mz-payment-note"><strong>გადახდა მხოლოდ უნაღდო. კურიერს გადახდა არ სჭირდება.</strong></p>
@@ -111,6 +112,8 @@ window.MZ_CITIES = {
     label: "ბათუმი",
     currency: "₾",
     addressPlaceholder: "მიწოდების მისამართი ბათუმში",
+    mapCenter: [41.6168, 41.6367],
+    mapBBox: [41.55, 41.68, 41.70, 41.55],
     messenger: {type:"whatsapp", number:"995593482218"},
     payments: [
       {bank:"Credo", holder:"Shevchenko Natalia", iban:"GE39CD0360000037536628"},
@@ -146,7 +149,9 @@ window.MZ_CART_TEXT = {
   payment: "გადახდა",
   copy: "კოპირება",
   copied: "დაკოპირდა",
-  checkoutWhatsapp: "შეკვეთის გაგზავნა WhatsApp-ზე"
+  checkoutWhatsapp: "შეკვეთის გაგზავნა WhatsApp-ზე",
+  searchStreet: "ქუჩის ძებნა",
+  confirmLocation: "ამ მისამართის გამოყენება"
 };
 </script>
 <script src="cart.js"></script>

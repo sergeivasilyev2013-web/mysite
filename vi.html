@@ -96,6 +96,7 @@
   <div id="mz-cart-list"></div>
   <div class="cart-total-row"><span>Tổng cộng</span><span><span id="mz-cart-total">0</span> <span id="mz-cart-currency"></span></span></div>
   <textarea id="mz-address" placeholder="Địa chỉ giao hàng tại Đà Nẵng"></textarea>
+  <button type="button" id="mz-pick-on-map" class="mz-map-btn">📍 Chọn trên bản đồ</button>
   <input id="mz-company-id" type="text" placeholder="Mã số doanh nghiệp (nếu là công ty, không bắt buộc)">
   <div id="mz-payment-section">
     <p class="mz-payment-note"><strong>Chỉ thanh toán chuyển khoản. Không cần trả tiền cho người giao hàng.</strong></p>
@@ -112,6 +113,8 @@ window.MZ_CITIES = {
     label: "Đà Nẵng",
     currency: "₫",
     addressPlaceholder: "Địa chỉ giao hàng tại Đà Nẵng",
+    mapCenter: [16.0544, 108.2022],
+    mapBBox: [108.10, 16.15, 108.30, 15.95],
     messenger: {type:"zalo", number:"84704711042"},
     payments: [
       {bank:"BIDV — PGD Đông Phan Thiết (VietQR)", holder:"VASILEV SERGEI", iban:"8808314124", qrImage:"images/vietqr-vasilev.jpg"}
@@ -134,7 +137,9 @@ window.MZ_CART_TEXT = {
   copy: "Sao chép",
   copied: "Đã sao chép",
   checkoutZalo: "Gửi đơn hàng qua Zalo",
-  zaloCopied: "Đã sao chép nội dung đơn hàng — dán vào khung chat Zalo vừa mở."
+  zaloCopied: "Đã sao chép nội dung đơn hàng — dán vào khung chat Zalo vừa mở.",
+  searchStreet: "Tìm đường phố",
+  confirmLocation: "Dùng địa chỉ này"
 };
 </script>
 <script src="cart.js"></script>

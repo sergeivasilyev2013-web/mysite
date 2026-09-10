@@ -210,6 +210,177 @@
     });
   }
 
+  // --- Map address picker (Leaflet + OpenStreetMap Nominatim, no API key) ---
+  var leafletMap = null;
+  var leafletMarker = null;
+  var searchDebounce = null;
+
+  function mapModalEl() {
+    var el = document.getElementById("mz-map-modal");
+    if (el) return el;
+    el = document.createElement("div");
+    el.id = "mz-map-modal";
+    el.innerHTML =
+      '<div class="mz-map-inner">' +
+        '<div class="mz-map-head">' +
+          '<input type="text" id="mz-map-search" placeholder="' + (t.searchStreet || "Search a street") + '">' +
+          '<button type="button" id="mz-map-close">×</button>' +
+        "</div>" +
+        '<div id="mz-map-results"></div>' +
+        '<div id="mz-map-canvas"></div>' +
+        '<div class="mz-map-foot">' +
+          '<span id="mz-map-picked"></span>' +
+          '<button type="button" id="mz-map-confirm" disabled>' + (t.confirmLocation || "Use this address") + "</button>" +
+        "</div>" +
+      "</div>";
+    document.body.appendChild(el);
+    return el;
+  }
+
+  function ensureLeaflet(cb) {
+    if (window.L) return cb();
+    var css = document.createElement("link");
+    css.rel = "stylesheet";
+    css.href = "https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css";
+    document.head.appendChild(css);
+    var script = document.createElement("script");
+    script.src = "https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js";
+    script.onload = cb;
+    document.head.appendChild(script);
+  }
+
+  var pickedAddress = null;
+
+  function setPicked(label, lat, lon) {
+    pickedAddress = { label: label, lat: lat, lon: lon };
+    var el = document.getElementById("mz-map-picked");
+    if (el) el.textContent = label;
+    var btn = document.getElementById("mz-map-confirm");
+    if (btn) btn.disabled = false;
+  }
+
+  function placeMarker(lat, lon) {
+    var latlng = [lat, lon];
+    if (!leafletMarker) {
+      leafletMarker = L.marker(latlng, { draggable: true }).addTo(leafletMap);
+      leafletMarker.on("dragend", function () {
+        var p = leafletMarker.getLatLng();
+        reverseGeocode(p.lat, p.lng);
+      });
+    } else {
+      leafletMarker.setLatLng(latlng);
+    }
+    leafletMap.setView(latlng, 16);
+  }
+
+  function nominatimFetch(url, cb) {
+    fetch(url, { headers: { Accept: "application/json" } })
+      .then(function (r) { return r.json(); })
+      .then(cb)
+      .catch(function () { cb(null); });
+  }
+
+  function reverseGeocode(lat, lon) {
+    placeMarker(lat, lon);
+    nominatimFetch(
+      "https://nominatim.openstreetmap.org/reverse?format=json&lat=" + lat + "&lon=" + lon,
+      function (data) {
+        var label = data && data.display_name ? data.display_name : lat.toFixed(5) + ", " + lon.toFixed(5);
+        setPicked(label, lat, lon);
+      }
+    );
+  }
+
+  function renderSearchResults(items) {
+    var box = document.getElementById("mz-map-results");
+    if (!box) return;
+    box.innerHTML = "";
+    if (!items || !items.length) {
+      box.hidden = true;
+      return;
+    }
+    box.hidden = false;
+    items.forEach(function (it) {
+      var row = document.createElement("div");
+      row.className = "mz-map-result-row";
+      row.textContent = it.display_name;
+      row.addEventListener("click", function () {
+        box.hidden = true;
+        var lat = parseFloat(it.lat), lon = parseFloat(it.lon);
+        placeMarker(lat, lon);
+        setPicked(it.display_name, lat, lon);
+        document.getElementById("mz-map-search").value = it.display_name;
+      });
+      box.appendChild(row);
+    });
+  }
+
+  function searchAddress(query) {
+    if (!query || query.length < 3) {
+      renderSearchResults([]);
+      return;
+    }
+    var c = city();
+    var vb = c.mapBBox ? "&viewbox=" + c.mapBBox.join(",") + "&bounded=1" : "";
+    nominatimFetch(
+      "https://nominatim.openstreetmap.org/search?format=json&limit=5&q=" + encodeURIComponent(query) + vb,
+      function (data) { renderSearchResults(data || []); }
+    );
+  }
+
+  function openMapPicker() {
+    var modal = mapModalEl();
+    modal.classList.add("open");
+    pickedAddress = null;
+    var confirmBtn = document.getElementById("mz-map-confirm");
+    if (confirmBtn) confirmBtn.disabled = true;
+    var pickedEl = document.getElementById("mz-map-picked");
+    if (pickedEl) pickedEl.textContent = "";
+    var searchInput = document.getElementById("mz-map-search");
+    if (searchInput) searchInput.value = "";
+    renderSearchResults([]);
+
+    ensureLeaflet(function () {
+      var c = city();
+      var center = c.mapCenter || [41.6168, 41.6367];
+      setTimeout(function () {
+        if (!leafletMap) {
+          leafletMap = L.map("mz-map-canvas").setView(center, 13);
+          L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+            attribution: "&copy; OpenStreetMap contributors",
+            maxZoom: 19
+          }).addTo(leafletMap);
+          leafletMap.on("click", function (e) {
+            reverseGeocode(e.latlng.lat, e.latlng.lng);
+          });
+        } else {
+          leafletMap.setView(center, 13);
+          leafletMap.invalidateSize();
+        }
+      }, 50);
+    });
+  }
+
+  function closeMapPicker() {
+    var modal = document.getElementById("mz-map-modal");
+    if (modal) modal.classList.remove("open");
+  }
+
+  function confirmMapPick() {
+    if (!pickedAddress) return;
+    var addressField = document.getElementById("mz-address");
+    if (addressField) addressField.value = pickedAddress.label;
+    closeMapPicker();
+  }
+
+  document.addEventListener("input", function (e) {
+    if (e.target && e.target.id === "mz-map-search") {
+      clearTimeout(searchDebounce);
+      var q = e.target.value;
+      searchDebounce = setTimeout(function () { searchAddress(q); }, 500);
+    }
+  });
+
   function updateAddressPlaceholder() {
     var el = document.getElementById("mz-address");
     if (el) el.placeholder = city().addressPlaceholder || "";
@@ -314,6 +485,22 @@
   }
 
   document.addEventListener("click", function (e) {
+    if (e.target.closest("#mz-pick-on-map")) {
+      openMapPicker();
+      return;
+    }
+    if (e.target.closest("#mz-map-close")) {
+      closeMapPicker();
+      return;
+    }
+    if (e.target.closest("#mz-map-confirm")) {
+      confirmMapPick();
+      return;
+    }
+    if (e.target.id === "mz-map-modal") {
+      closeMapPicker();
+      return;
+    }
     var cityBtn = e.target.closest("[data-city-btn]");
     if (cityBtn) {
       setCity(cityBtn.getAttribute("data-city-btn"));

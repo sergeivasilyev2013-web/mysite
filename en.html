@@ -99,6 +99,7 @@
   <div id="mz-cart-list"></div>
   <div class="cart-total-row"><span>Total</span><span><span id="mz-cart-total">0.00</span> <span id="mz-cart-currency"></span></span></div>
   <textarea id="mz-address" placeholder="Delivery address"></textarea>
+  <button type="button" id="mz-pick-on-map" class="mz-map-btn">📍 Pick on map</button>
   <input id="mz-company-id" type="text" placeholder="Company ID (if a business, optional)">
   <div id="mz-payment-section">
     <p class="mz-payment-note"><strong>Bank transfer only, no cash. Nothing to pay the courier.</strong></p>
@@ -115,6 +116,8 @@ window.MZ_CITIES = {
     label: "Batumi",
     currency: "₾",
     addressPlaceholder: "Delivery address in Batumi",
+    mapCenter: [41.6168, 41.6367],
+    mapBBox: [41.55, 41.68, 41.70, 41.55],
     messenger: {type:"whatsapp", number:"995593482218"},
     payments: [
       {bank:"Credo", holder:"Shevchenko Natalia", iban:"GE39CD0360000037536628"},
@@ -141,6 +144,8 @@ window.MZ_CITIES = {
     label: "Da Nang",
     currency: "₫",
     addressPlaceholder: "Delivery address in Da Nang",
+    mapCenter: [16.0544, 108.2022],
+    mapBBox: [108.10, 16.15, 108.30, 15.95],
     messenger: {type:"zalo", number:"84704711042"},
     payments: [
       {bank:"BIDV — PGD Đông Phan Thiết (VietQR)", holder:"VASILEV SERGEI", iban:"8808314124", qrImage:"images/vietqr-vasilev.jpg"}
@@ -164,7 +169,9 @@ window.MZ_CART_TEXT = {
   copied: "Copied",
   checkoutWhatsapp: "Send order via WhatsApp",
   checkoutZalo: "Send order via Zalo",
-  zaloCopied: "Order text copied — paste it into the Zalo chat that just opened."
+  zaloCopied: "Order text copied — paste it into the Zalo chat that just opened.",
+  searchStreet: "Search a street",
+  confirmLocation: "Use this address"
 };
 </script>
 <script src="cart.js"></script>
