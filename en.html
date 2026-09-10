@@ -57,6 +57,15 @@
   </div>
 </section>
 
+<section class="catalog">
+  <div class="wrap">
+    <h2>Catalog (Batumi)</h2>
+    <p class="price-note">Prices in Georgian Lari (₾) per tray. As of 2026-09-11 — confirm availability.</p>
+    <div class="product-grid" id="mz-product-grid"></div>
+    <p class="price-note" style="margin-top:20px;">Orders placed before 1:00 PM ship same day; after 1:00 PM ship the next day. Delivery in Batumi: free from 3 trays, otherwise 5 ₾. An rs.ge document comes with every delivery.</p>
+  </div>
+</section>
+
 <section class="about">
   <div class="wrap">
     <h2>Two cities, active from day one</h2>
@@ -76,5 +85,47 @@
     <div>© 2026 Microzelen · Batumi · Da Nang</div>
   </div>
 </footer>
+
+<button id="mz-cart-toggle" type="button">🛒 <span id="mz-cart-count">0</span></button>
+<div id="mz-cart-panel">
+  <div class="cart-head">
+    <strong>Cart</strong>
+    <button id="mz-cart-close" type="button">×</button>
+  </div>
+  <div id="mz-cart-list"></div>
+  <div class="cart-total-row"><span>Total</span><span>₾<span id="mz-cart-total">0.00</span></span></div>
+  <textarea id="mz-address" placeholder="Delivery address in Batumi"></textarea>
+  <button id="mz-checkout-btn" type="button">Send order via WhatsApp</button>
+</div>
+
+<script>
+window.MZ_CURRENCY = "₾";
+window.MZ_PRODUCTS = [
+  {id:"pea", name:"Green Pea Shoots", unit:"tray", price:14},
+  {id:"arugula", name:"Arugula", unit:"tray", price:14},
+  {id:"broccoli", name:"Broccoli", unit:"tray", price:14},
+  {id:"mizuna", name:"Mizuna", unit:"tray", price:14},
+  {id:"radish", name:"Tricolor Radish", unit:"tray", price:14},
+  {id:"kohlrabi", name:"Purple Kohlrabi", unit:"tray", price:14},
+  {id:"amaranth", name:"Red Amaranth", unit:"tray", price:16},
+  {id:"sorrel", name:"Red-Veined Sorrel", unit:"tray", price:16},
+  {id:"basil", name:"Green Basil", unit:"tray", price:16},
+  {id:"sunflower", name:"Sunflower", unit:"tray", price:14},
+  {id:"cress", name:"Cress", unit:"tray", price:14},
+  {id:"flowers", name:"Edible Flowers", unit:"tray", price:35},
+  {id:"kit", name:"\"Five Harvests\" Grow-Your-Own Kit", unit:"kit", price:40}
+];
+window.MZ_MESSENGER = {type:"whatsapp", number:"995593482218"};
+window.MZ_CART_TEXT = {
+  empty: "Cart is empty",
+  orderTitle: "New Microzelen order:",
+  total: "Total",
+  address: "Delivery address",
+  addressRequired: "Please enter a delivery address",
+  addToCart: "Add to cart",
+  inCart: "In cart"
+};
+</script>
+<script src="cart.js"></script>
 </body>
 </html>

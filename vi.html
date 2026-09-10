@@ -57,6 +57,15 @@
   </div>
 </section>
 
+<section class="catalog">
+  <div class="wrap">
+    <h2>Danh mục (Đà Nẵng)</h2>
+    <p class="price-note">Giá theo đồng Việt Nam (₫) mỗi khay. Cập nhật 11.09.2026 — hàng hiện còn hạn chế, sẽ bổ sung thêm loại rau mầm sớm.</p>
+    <div class="product-grid" id="mz-product-grid"></div>
+    <p class="price-note" style="margin-top:20px;">Miễn phí giao hàng nội thành từ 3 khay trở lên.</p>
+  </div>
+</section>
+
 <section class="about">
   <div class="wrap">
     <h2>Hai thành phố, hoạt động song song từ ngày đầu</h2>
@@ -76,5 +85,36 @@
     <div>© 2026 Microzelen · Batumi · Da Nang</div>
   </div>
 </footer>
+
+<button id="mz-cart-toggle" type="button">🛒 <span id="mz-cart-count">0</span></button>
+<div id="mz-cart-panel">
+  <div class="cart-head">
+    <strong>Giỏ hàng</strong>
+    <button id="mz-cart-close" type="button">×</button>
+  </div>
+  <div id="mz-cart-list"></div>
+  <div class="cart-total-row"><span>Tổng cộng</span><span><span id="mz-cart-total">0</span> ₫</span></div>
+  <textarea id="mz-address" placeholder="Địa chỉ giao hàng tại Đà Nẵng"></textarea>
+  <button id="mz-checkout-btn" type="button">Gửi đơn hàng qua Zalo</button>
+</div>
+
+<script>
+window.MZ_CURRENCY = "₫";
+window.MZ_PRODUCTS = [
+  {id:"pea", name:"Đậu Hà Lan (rau mầm)", unit:"khay", price:75000}
+];
+window.MZ_MESSENGER = {type:"zalo", number:"84704711042"};
+window.MZ_CART_TEXT = {
+  empty: "Giỏ hàng trống",
+  orderTitle: "Đơn hàng Microzelen mới:",
+  total: "Tổng cộng",
+  address: "Địa chỉ giao hàng",
+  addressRequired: "Vui lòng nhập địa chỉ giao hàng",
+  addToCart: "Thêm vào giỏ",
+  inCart: "Trong giỏ",
+  zaloCopied: "Đã sao chép nội dung đơn hàng — dán vào khung chat Zalo vừa mở."
+};
+</script>
+<script src="cart.js"></script>
 </body>
 </html>
