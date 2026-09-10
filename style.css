@@ -555,6 +555,11 @@ section.catalog .price-note {
   object-fit: contain;
 }
 
+.mz-pay-amount {
+  margin-top: 4px;
+  font-size: 0.85rem;
+}
+
 .mz-copy-iban {
   background: var(--card);
   border: 1px solid var(--border);

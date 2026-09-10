@@ -193,7 +193,7 @@ window.MZ_CITIES = {
       {type:"zalo", number:"84704611042", label:"Zalo (QR)"}
     ],
     payments: [
-      {bank:"BIDV — PGD Đông Phan Thiết (VietQR)", holder:"VASILEV SERGEI", iban:"8808314124", qrImage:"images/vietqr-vasilev.jpg"}
+      {bank:"BIDV — PGD Đông Phan Thiết (VietQR)", holder:"VASILEV SERGEI", iban:"8808314124", qrImage:"images/vietqr-vasilev.jpg", qrBankId:"BIDV", qrNote:"Microzelen order"}
     ],
     products: [
       {id:"pea", name:"Green Pea Shoots", nameRu:"Зелёный горошек", unit:"tray", unitRu:"лоток", image:"images/pea.jpg", price:75000}
@@ -216,6 +216,8 @@ window.MZ_CART_TEXT = {
   freeDelivery: "Free",
   deliveryNote: "Free from {count} trays or {total}",
   copied: "Copied",
+  amountToPay: "Amount due",
+  transferPurpose: "Microzelen order payment",
   checkoutWhatsapp: "Send order via WhatsApp",
   checkoutZalo: "Send order via Zalo",
   checkoutTelegram: "Send order via Telegram",

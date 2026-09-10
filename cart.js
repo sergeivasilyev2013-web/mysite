@@ -233,15 +233,28 @@
     }
     wrap.hidden = false;
     list.innerHTML = "";
+    var amount = grandTotal();
+    var amountLabel = amount > 0 ? fmt(amount) + " " + (city().currency || "") : "";
     payments.forEach(function (p, i) {
       var row = document.createElement("label");
       row.className = "mz-payment-row";
-      var qrHtml = p.qrImage ? '<br><img src="' + p.qrImage + '" alt="QR" class="mz-payment-qr">' : "";
       var logoHtml = p.logo ? '<img src="' + p.logo + '" alt="" class="mz-bank-logo">' : "";
+      var qrSrc = p.qrImage || "";
+      if (p.qrBankId && amount > 0) {
+        // addInfo/accountName ride Vietnam's interbank rails, which only accept
+        // plain ASCII, so this is deliberately not the localized transferPurpose.
+        var info = encodeURIComponent(p.qrNote || "Microzelen order");
+        var name = encodeURIComponent(p.holder || "");
+        qrSrc = "https://img.vietqr.io/image/" + p.qrBankId + "-" + p.iban + "-qr_only.png?amount=" + Math.round(amount) + "&addInfo=" + info + "&accountName=" + name;
+      }
+      var qrFallback = qrSrc !== p.qrImage && p.qrImage ? " onerror=\"this.onerror=null;this.src='" + p.qrImage + "';\"" : "";
+      var qrHtml = qrSrc ? '<br><img src="' + qrSrc + '" alt="QR"' + qrFallback + ' class="mz-payment-qr">' : "";
+      var amountHtml = amountLabel ? '<div class="mz-pay-amount">' + (t.amountToPay || "Amount due") + ": <strong>" + amountLabel + "</strong></div>" : "";
       row.innerHTML =
         '<input type="radio" name="mz-payment" value="' + i + '"' + (i === 0 ? " checked" : "") + ">" +
         '<span><span class="mz-bank-name">' + logoHtml + '<strong>' + p.bank + "</strong></span><br>" + p.holder + "<br><code>" + p.iban + "</code> " +
-        '<button type="button" class="mz-copy-iban" data-iban="' + p.iban + '">' + (t.copy || "Copy") + "</button>" + qrHtml + "</span>";
+        '<button type="button" class="mz-copy-iban" data-bank="' + p.bank + '" data-holder="' + p.holder + '" data-iban="' + p.iban + '">' + (t.copy || "Copy") + "</button>" +
+        amountHtml + qrHtml + "</span>";
       list.appendChild(row);
     });
   }
@@ -751,7 +764,17 @@
     }
     var copyBtn = e.target.closest(".mz-copy-iban");
     if (copyBtn) {
-      var iban = copyBtn.getAttribute("data-iban");
+      var lines = [
+        copyBtn.getAttribute("data-bank") || "",
+        copyBtn.getAttribute("data-holder") || "",
+        copyBtn.getAttribute("data-iban") || ""
+      ];
+      var amt = grandTotal();
+      if (amt > 0) {
+        lines.push((t.amountToPay || "Amount due") + ": " + fmt(amt) + " " + (city().currency || ""));
+      }
+      if (t.transferPurpose) lines.push(t.transferPurpose);
+      var text = lines.join("\n");
       var done = function () {
         var original = copyBtn.textContent;
         copyBtn.textContent = t.copied || "Copied";
@@ -760,7 +783,7 @@
         }, 1500);
       };
       if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(iban).then(done, done);
+        navigator.clipboard.writeText(text).then(done, done);
       } else {
         done();
       }
