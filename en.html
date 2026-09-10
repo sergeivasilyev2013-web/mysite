@@ -92,7 +92,7 @@
     <div class="product-grid" id="mz-product-grid"></div>
     <p class="price-note" data-city-note="batumi" style="margin-top:20px;">Orders placed before 1:00 PM ship same day; after 1:00 PM ship the next day. Delivery in Batumi: free from 3 trays, otherwise 5 ₾. An rs.ge document comes with every delivery.</p>
     <p class="price-note" data-city-note="batumi"><strong>Bank transfer only, no cash.</strong> Nothing to pay the courier — pick a bank when you check out.</p>
-    <p class="price-note" data-city-note="danang" style="margin-top:20px;">Free delivery in the city from 3 trays.</p>
+    <p class="price-note" data-city-note="danang" style="margin-top:20px;">Delivery in the city: free from 3 trays, otherwise 75,000 ₫.</p>
     <p class="price-note" data-city-note="danang"><strong>Payment by VietQR bank transfer only.</strong> Nothing to pay the courier.</p>
   </div>
 </section>
@@ -186,6 +186,8 @@ window.MZ_CITIES = {
     addressPlaceholder: "Delivery address in Da Nang",
     mapCenter: [16.0544, 108.2022],
     mapBBox: [108.10, 16.15, 108.30, 15.95],
+    freeDeliveryMinCount: 3,
+    deliveryFee: 75000,
     messengers: [
       {type:"whatsapp", number:"84704611042", label:"WhatsApp"},
       {type:"telegram", username:"microzelen_batumi_DaNangvn", label:"Telegram"},

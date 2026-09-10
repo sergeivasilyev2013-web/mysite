@@ -62,7 +62,7 @@
     <h2>Danh mục (Đà Nẵng)</h2>
     <p class="price-note">Giá theo đồng Việt Nam (₫) mỗi khay. Hàng hiện còn hạn chế, sẽ bổ sung thêm loại rau mầm sớm.</p>
     <div class="product-grid" id="mz-product-grid"></div>
-    <p class="price-note" style="margin-top:20px;">Miễn phí giao hàng nội thành từ 3 khay trở lên.</p>
+    <p class="price-note" style="margin-top:20px;">Giao hàng nội thành: miễn phí từ 3 khay, dưới 3 khay — 75.000 ₫.</p>
     <p class="price-note"><strong>Chỉ thanh toán chuyển khoản qua VietQR.</strong> Không cần trả tiền cho người giao hàng.</p>
   </div>
 </section>
@@ -94,6 +94,7 @@
     <button id="mz-cart-close" type="button">×</button>
   </div>
   <div id="mz-cart-list"></div>
+  <div id="mz-delivery-row" class="cart-total-row" hidden><span>Giao hàng<br><small id="mz-delivery-note" style="font-weight:400;color:var(--muted);"></small></span><span id="mz-delivery-fee">0</span></div>
   <div class="cart-total-row"><span>Tổng cộng</span><span><span id="mz-cart-total">0</span> <span id="mz-cart-currency"></span></span></div>
   <textarea id="mz-address" placeholder="Địa chỉ giao hàng tại Đà Nẵng"></textarea>
   <button type="button" id="mz-pick-on-map" class="mz-map-btn">📍 Chọn trên bản đồ</button>
@@ -120,6 +121,8 @@ window.MZ_CITIES = {
     addressPlaceholder: "Địa chỉ giao hàng tại Đà Nẵng",
     mapCenter: [16.0544, 108.2022],
     mapBBox: [108.10, 16.15, 108.30, 15.95],
+    freeDeliveryMinCount: 3,
+    deliveryFee: 75000,
     messengers: [
       {type:"whatsapp", number:"84704611042", label:"WhatsApp"},
       {type:"telegram", username:"microzelen_batumi_DaNangvn", label:"Telegram"},
@@ -145,6 +148,7 @@ window.MZ_CART_TEXT = {
   payment: "Thanh toán",
   copy: "Sao chép",
   copied: "Đã sao chép",
+  freeDelivery: "Miễn phí",
   amountToPay: "Số tiền cần thanh toán",
   checkoutWhatsapp: "Gửi đơn hàng qua WhatsApp",
   checkoutZalo: "Gửi đơn hàng qua Zalo",

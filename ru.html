@@ -92,7 +92,7 @@
     <div class="product-grid" id="mz-product-grid"></div>
     <p class="price-note" data-city-note="batumi" style="margin-top:20px;">Заказы принимаем до 13:00 — доставка в этот же день, после 13:00 — на следующий день. Доставка по Батуми: от 3 лотков бесплатно, меньше — 5 ₾. Документы rs.ge на каждой поставке.</p>
     <p class="price-note" data-city-note="batumi"><strong>Оплата только безналичная, переводом по реквизитам.</strong> Курьеру платить не нужно — выбор банка при оформлении заказа в корзине.</p>
-    <p class="price-note" data-city-note="danang" style="margin-top:20px;">Бесплатная доставка по городу от 3 лотков.</p>
+    <p class="price-note" data-city-note="danang" style="margin-top:20px;">Доставка по городу: от 3 лотков бесплатно, меньше — 75 000 ₫.</p>
     <p class="price-note" data-city-note="danang"><strong>Оплата только переводом по QR-коду (VietQR).</strong> Курьеру платить не нужно.</p>
   </div>
 </section>
@@ -185,6 +185,8 @@ window.MZ_CITIES = {
     addressPlaceholder: "Адрес доставки в Дананге",
     mapCenter: [16.0544, 108.2022],
     mapBBox: [108.10, 16.15, 108.30, 15.95],
+    freeDeliveryMinCount: 3,
+    deliveryFee: 75000,
     messengers: [
       {type:"whatsapp", number:"84704611042", label:"WhatsApp"},
       {type:"telegram", username:"microzelen_batumi_DaNangvn", label:"Telegram"},
