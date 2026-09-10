@@ -609,32 +609,25 @@
     if (m.type === "whatsapp") {
       window.open("https://wa.me/" + m.number + "?text=" + encodeURIComponent(text), "_blank");
     } else if (m.type === "telegram") {
-      // Telegram has no prefill-text deep link for a regular chat/channel, so
-      // copy the text and open the chat the same popup-safe way as WhatsApp.
-      var win = window.open("https://t.me/" + m.username, "_blank");
+      // Telegram has no prefill-text deep link for a regular chat/channel.
+      // Fire the clipboard write and the navigation back-to-back, both
+      // synchronously in this click handler: clipboard access needs the
+      // page to still have focus (opening the tab first would steal it and
+      // silently fail the copy), while window.open needs to run in the same
+      // tick as the click so mobile Safari doesn't block it as a popup.
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(text).then(function () {
           toast(t.telegramCopied || "Order text copied — paste it into the Telegram chat that just opened.");
-        });
+        }, function () {});
       }
+      window.open("https://t.me/" + m.username, "_blank");
     } else if (m.type === "zalo") {
-      // Open the tab synchronously, in the same call stack as the click, so
-      // mobile Safari still treats it as a user-initiated navigation even
-      // though the clipboard write below finishes asynchronously.
-      var zwin = window.open("about:blank", "_blank");
-      var ztarget = "https://zalo.me/" + m.number;
-      var zgo = function () {
-        if (zwin) zwin.location.href = ztarget;
-        else window.location.href = ztarget;
-      };
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(text).then(function () {
           toast(t.zaloCopied || "Order text copied — paste it into the Zalo chat that just opened.");
-          zgo();
-        }, zgo);
-      } else {
-        zgo();
+        }, function () {});
       }
+      window.open("https://zalo.me/" + m.number, "_blank");
     }
   }
 
