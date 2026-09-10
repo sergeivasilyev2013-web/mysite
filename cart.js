@@ -199,7 +199,9 @@
     (city().products || []).forEach(function (p) {
       var card = document.createElement("div");
       card.className = "product-card";
+      var imgHtml = p.image ? '<img class="product-photo" src="' + p.image + '" alt="' + p.name + '" loading="lazy">' : "";
       card.innerHTML =
+        imgHtml +
         '<div class="name">' + p.name + "</div>" +
         '<div class="price">' + fmt(p.price) + " " + city().currency + " / " + p.unit + "</div>" +
         '<div class="add-row">' +
