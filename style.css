@@ -277,6 +277,40 @@ section.about p {
   color: var(--muted);
 }
 
+.contact-groups {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 28px;
+  margin-top: 28px;
+  text-align: left;
+}
+
+.contact-group h3 {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  margin: 0 0 6px;
+  color: var(--green-dark);
+}
+
+section.about .contact-group p {
+  margin: 0;
+  font-size: 0.92rem;
+  max-width: none;
+}
+
+.contact-group a {
+  color: var(--ink);
+  font-weight: 600;
+  text-decoration: none;
+  border-bottom: 1px solid var(--border);
+}
+
+.contact-group a:hover {
+  border-color: var(--green);
+}
+
 footer.site {
   border-top: 1px solid var(--border);
   padding: 28px 0 40px;
