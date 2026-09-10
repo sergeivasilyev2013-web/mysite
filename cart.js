@@ -593,6 +593,40 @@
     }
   }
 
+  // Shown instead of a toast for Telegram/Zalo: the toast lives on this page,
+  // but the customer's attention jumps to the newly opened chat immediately,
+  // so a fading notice here is easy to miss entirely. This modal blocks until
+  // acknowledged, and only opens the chat once the customer clicks through it
+  // — which also doubles as a fresh click for window.open, safe from popup
+  // blockers.
+  function handoffModalEl() {
+    var el = document.getElementById("mz-handoff-modal");
+    if (el) return el;
+    el = document.createElement("div");
+    el.id = "mz-handoff-modal";
+    el.className = "mz-simple-modal";
+    el.innerHTML =
+      '<div class="mz-simple-modal-inner">' +
+        '<button type="button" class="mz-simple-modal-close" data-handoff-close>×</button>' +
+        '<p data-handoff-text></p>' +
+        '<button type="button" id="mz-handoff-btn" class="mz-map-btn" style="width:100%;"></button>' +
+      "</div>";
+    document.body.appendChild(el);
+    return el;
+  }
+
+  function openHandoffModal(message, url, buttonLabel) {
+    var el = handoffModalEl();
+    el.querySelector("[data-handoff-text]").textContent = message;
+    var btn = document.getElementById("mz-handoff-btn");
+    btn.textContent = buttonLabel;
+    btn.onclick = function () {
+      window.open(url, "_blank");
+      el.classList.remove("open");
+    };
+    el.classList.add("open");
+  }
+
   function submitOrder() {
     if (cartCount() === 0) return;
     var addressInput = document.getElementById("mz-address");
@@ -610,24 +644,27 @@
       window.open("https://wa.me/" + m.number + "?text=" + encodeURIComponent(text), "_blank");
     } else if (m.type === "telegram") {
       // Telegram has no prefill-text deep link for a regular chat/channel.
-      // Fire the clipboard write and the navigation back-to-back, both
-      // synchronously in this click handler: clipboard access needs the
-      // page to still have focus (opening the tab first would steal it and
-      // silently fail the copy), while window.open needs to run in the same
-      // tick as the click so mobile Safari doesn't block it as a popup.
+      // Copy while this page still has focus (opening the chat first would
+      // steal focus and silently break clipboard access), then show a modal
+      // the customer has to click through — that click is what actually
+      // opens the chat, so it's a fresh user gesture and won't be popup-blocked.
       if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(text).then(function () {
-          toast(t.telegramCopied || "Order text copied — paste it into the Telegram chat that just opened.");
-        }, function () {});
+        navigator.clipboard.writeText(text);
       }
-      window.open("https://t.me/" + m.username, "_blank");
+      openHandoffModal(
+        t.telegramCopied || "Order text copied. Tap below to open Telegram, then paste it (press and hold the message box).",
+        "https://t.me/" + m.username,
+        t.openTelegram || "Open Telegram"
+      );
     } else if (m.type === "zalo") {
       if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(text).then(function () {
-          toast(t.zaloCopied || "Order text copied — paste it into the Zalo chat that just opened.");
-        }, function () {});
+        navigator.clipboard.writeText(text);
       }
-      window.open("https://zalo.me/" + m.number, "_blank");
+      openHandoffModal(
+        t.zaloCopied || "Order text copied. Tap below to open Zalo, then paste it (press and hold the message box).",
+        "https://zalo.me/" + m.number,
+        t.openZalo || "Open Zalo"
+      );
     }
   }
 
@@ -642,6 +679,14 @@
     }
     if (e.target.id === "mz-zalo-modal") {
       closeZaloModal();
+      return;
+    }
+    if (e.target.closest("[data-handoff-close]")) {
+      document.getElementById("mz-handoff-modal").classList.remove("open");
+      return;
+    }
+    if (e.target.id === "mz-handoff-modal") {
+      e.target.classList.remove("open");
       return;
     }
     if (e.target.closest("#mz-pick-on-map")) {
