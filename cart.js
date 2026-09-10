@@ -193,6 +193,17 @@
     return [];
   }
 
+  // Hero/footer WhatsApp links are static HTML, not part of the cart panel,
+  // so they need their own sync whenever the active city (and its WhatsApp
+  // number) changes.
+  function updateStaticWhatsapp() {
+    var wa = cityMessengers().filter(function (m) { return m.type === "whatsapp"; })[0];
+    if (!wa) return;
+    document.querySelectorAll('a[href^="https://wa.me/"]').forEach(function (a) {
+      a.href = "https://wa.me/" + wa.number;
+    });
+  }
+
   function renderMessengerSection() {
     var wrap = document.getElementById("mz-messenger-section");
     var list = document.getElementById("mz-messenger-list");
@@ -253,7 +264,7 @@
       row.innerHTML =
         '<input type="radio" name="mz-payment" value="' + i + '"' + (i === 0 ? " checked" : "") + ">" +
         '<span><span class="mz-bank-name">' + logoHtml + '<strong>' + p.bank + "</strong></span><br>" + p.holder + "<br><code>" + p.iban + "</code> " +
-        '<button type="button" class="mz-copy-iban" data-bank="' + p.bank + '" data-holder="' + p.holder + '" data-iban="' + p.iban + '">' + (t.copy || "Copy") + "</button>" +
+        '<button type="button" class="mz-copy-iban" data-iban="' + p.iban + '">' + (t.copy || "Copy") + "</button>" +
         amountHtml + qrHtml + "</span>";
       list.appendChild(row);
     });
@@ -506,6 +517,7 @@
     renderCartPanel();
     updateAddressPlaceholder();
     updateCityButtons();
+    updateStaticWhatsapp();
   }
 
   var BILINGUAL = !!window.MZ_BILINGUAL_MESSAGE;
@@ -644,7 +656,10 @@
   }
 
   function submitOrder() {
-    if (cartCount() === 0) return;
+    if (cartCount() === 0) {
+      toast(t.empty || "Cart is empty");
+      return;
+    }
     var addressInput = document.getElementById("mz-address");
     var address = addressInput ? addressInput.value.trim() : "";
     if (!address) {
@@ -764,17 +779,10 @@
     }
     var copyBtn = e.target.closest(".mz-copy-iban");
     if (copyBtn) {
-      var lines = [
-        copyBtn.getAttribute("data-bank") || "",
-        copyBtn.getAttribute("data-holder") || "",
-        copyBtn.getAttribute("data-iban") || ""
-      ];
-      var amt = grandTotal();
-      if (amt > 0) {
-        lines.push((t.amountToPay || "Amount due") + ": " + fmt(amt) + " " + (city().currency || ""));
-      }
-      if (t.transferPurpose) lines.push(t.transferPurpose);
-      var text = lines.join("\n");
+      // Only the account number goes on the clipboard: it's the one field a
+      // banking app actually accepts pasted text into. Bank, holder and
+      // amount are already shown as plain text right next to this button.
+      var text = copyBtn.getAttribute("data-iban") || "";
       var done = function () {
         var original = copyBtn.textContent;
         copyBtn.textContent = t.copied || "Copied";
