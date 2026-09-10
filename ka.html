@@ -95,6 +95,7 @@
   <div id="mz-cart-list"></div>
   <div class="cart-total-row"><span>ჯამი</span><span><span id="mz-cart-total">0.00</span> <span id="mz-cart-currency"></span></span></div>
   <textarea id="mz-address" placeholder="მიწოდების მისამართი ბათუმში"></textarea>
+  <input id="mz-company-id" type="text" placeholder="საიდენტიფიკაციო კოდი (იურ. პირისთვის, არასავალდებულო)">
   <div id="mz-payment-section">
     <p class="mz-payment-note"><strong>გადახდა მხოლოდ უნაღდო. კურიერს გადახდა არ სჭირდება.</strong></p>
     <div id="mz-payment-list"></div>
@@ -104,6 +105,7 @@
 
 <script>
 window.MZ_DEFAULT_CITY = "batumi";
+window.MZ_BILINGUAL_MESSAGE = true;
 window.MZ_CITIES = {
   batumi: {
     label: "ბათუმი",
@@ -116,19 +118,19 @@ window.MZ_CITIES = {
       {bank:"TBC", holder:"Sergei Vasilev", iban:"GE54TB7899145064400001"}
     ],
     products: [
-      {id:"pea", name:"მწვანე ბარდა", unit:"ლანგარი", price:14},
-      {id:"arugula", name:"როკა", unit:"ლანგარი", price:14},
-      {id:"broccoli", name:"ბროკოლი", unit:"ლანგარი", price:14},
-      {id:"mizuna", name:"მიზუნა", unit:"ლანგარი", price:14},
-      {id:"radish", name:"სამფერო რედისი", unit:"ლანგარი", price:14},
-      {id:"kohlrabi", name:"იისფერი კოლრაბი", unit:"ლანგარი", price:14},
-      {id:"amaranth", name:"წითელი ამარანტი", unit:"ლანგარი", price:16},
-      {id:"sorrel", name:"მჟაუნა წითელი ძარღვით", unit:"ლანგარი", price:16},
-      {id:"basil", name:"მწვანე ბაზილიკი", unit:"ლანგარი", price:16},
-      {id:"sunflower", name:"მზესუმზირა", unit:"ლანგარი", price:14},
-      {id:"cress", name:"კრესის სალათი", unit:"ლანგარი", price:14},
-      {id:"flowers", name:"საჭმელი ყვავილები", unit:"ლანგარი", price:35},
-      {id:"kit", name:"ნაკრები \"ხუთი მოსავალი\"", unit:"ნაკრები", price:40}
+      {id:"pea", name:"მწვანე ბარდა", nameRu:"Зелёный горошек", unit:"ლანგარი", unitRu:"лоток", price:14},
+      {id:"arugula", name:"როკა", nameRu:"Руккола", unit:"ლანგარი", unitRu:"лоток", price:14},
+      {id:"broccoli", name:"ბროკოლი", nameRu:"Брокколи", unit:"ლანგარი", unitRu:"лоток", price:14},
+      {id:"mizuna", name:"მიზუნა", nameRu:"Мизуна", unit:"ლანგარი", unitRu:"лоток", price:14},
+      {id:"radish", name:"სამფერო რედისი", nameRu:"Редис Триколор", unit:"ლანგარი", unitRu:"лоток", price:14},
+      {id:"kohlrabi", name:"იისფერი კოლრაბი", nameRu:"Кольраби Фиолетовая", unit:"ლანგარი", unitRu:"лоток", price:14},
+      {id:"amaranth", name:"წითელი ამარანტი", nameRu:"Красный Амарант", unit:"ლანგარი", unitRu:"лоток", price:16},
+      {id:"sorrel", name:"მჟაუნა წითელი ძარღვით", nameRu:"Щавель с красной жилкой", unit:"ლანგარი", unitRu:"лоток", price:16},
+      {id:"basil", name:"მწვანე ბაზილიკი", nameRu:"Базилик зелёный", unit:"ლანგარი", unitRu:"лоток", price:16},
+      {id:"sunflower", name:"მზესუმზირა", nameRu:"Подсолнечник", unit:"ლანგარი", unitRu:"лоток", price:14},
+      {id:"cress", name:"კრესის სალათი", nameRu:"Кресс-салат", unit:"ლანგარი", unitRu:"лоток", price:14},
+      {id:"flowers", name:"საჭმელი ყვავილები", nameRu:"Съедобные цветы", unit:"ლანგარი", unitRu:"лоток", price:35},
+      {id:"kit", name:"ნაკრები \"ხუთი მოსავალი\"", nameRu:"Набор \"Пять урожаев\"", unit:"ნაკრები", unitRu:"набор", price:40}
     ]
   }
 };
@@ -140,6 +142,7 @@ window.MZ_CART_TEXT = {
   addressRequired: "მიუთითეთ მიწოდების მისამართი",
   addToCart: "კალათაში დამატება",
   inCart: "კალათაში",
+  companyId: "საიდენტიფიკაციო კოდი",
   payment: "გადახდა",
   copy: "კოპირება",
   copied: "დაკოპირდა",

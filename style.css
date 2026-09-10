@@ -384,7 +384,7 @@ section.catalog .price-note {
   font-size: 1rem;
 }
 
-#mz-address {
+#mz-address, #mz-company-id {
   width: 100%;
   padding: 10px 12px;
   border-radius: 8px;
@@ -392,6 +392,9 @@ section.catalog .price-note {
   font-family: inherit;
   font-size: 0.9rem;
   margin-bottom: 12px;
+}
+
+#mz-address {
   resize: vertical;
   min-height: 60px;
 }

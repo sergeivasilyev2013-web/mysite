@@ -99,6 +99,7 @@
   <div id="mz-cart-list"></div>
   <div class="cart-total-row"><span>Total</span><span><span id="mz-cart-total">0.00</span> <span id="mz-cart-currency"></span></span></div>
   <textarea id="mz-address" placeholder="Delivery address"></textarea>
+  <input id="mz-company-id" type="text" placeholder="Company ID (if a business, optional)">
   <div id="mz-payment-section">
     <p class="mz-payment-note"><strong>Bank transfer only, no cash. Nothing to pay the courier.</strong></p>
     <div id="mz-payment-list"></div>
@@ -108,6 +109,7 @@
 
 <script>
 window.MZ_DEFAULT_CITY = "batumi";
+window.MZ_BILINGUAL_MESSAGE = true;
 window.MZ_CITIES = {
   batumi: {
     label: "Batumi",
@@ -120,19 +122,19 @@ window.MZ_CITIES = {
       {bank:"TBC", holder:"Sergei Vasilev", iban:"GE54TB7899145064400001"}
     ],
     products: [
-      {id:"pea", name:"Green Pea Shoots", unit:"tray", price:14},
-      {id:"arugula", name:"Arugula", unit:"tray", price:14},
-      {id:"broccoli", name:"Broccoli", unit:"tray", price:14},
-      {id:"mizuna", name:"Mizuna", unit:"tray", price:14},
-      {id:"radish", name:"Tricolor Radish", unit:"tray", price:14},
-      {id:"kohlrabi", name:"Purple Kohlrabi", unit:"tray", price:14},
-      {id:"amaranth", name:"Red Amaranth", unit:"tray", price:16},
-      {id:"sorrel", name:"Red-Veined Sorrel", unit:"tray", price:16},
-      {id:"basil", name:"Green Basil", unit:"tray", price:16},
-      {id:"sunflower", name:"Sunflower", unit:"tray", price:14},
-      {id:"cress", name:"Cress", unit:"tray", price:14},
-      {id:"flowers", name:"Edible Flowers", unit:"tray", price:35},
-      {id:"kit", name:"\"Five Harvests\" Grow-Your-Own Kit", unit:"kit", price:40}
+      {id:"pea", name:"Green Pea Shoots", nameRu:"Зелёный горошек", unit:"tray", unitRu:"лоток", price:14},
+      {id:"arugula", name:"Arugula", nameRu:"Руккола", unit:"tray", unitRu:"лоток", price:14},
+      {id:"broccoli", name:"Broccoli", nameRu:"Брокколи", unit:"tray", unitRu:"лоток", price:14},
+      {id:"mizuna", name:"Mizuna", nameRu:"Мизуна", unit:"tray", unitRu:"лоток", price:14},
+      {id:"radish", name:"Tricolor Radish", nameRu:"Редис Триколор", unit:"tray", unitRu:"лоток", price:14},
+      {id:"kohlrabi", name:"Purple Kohlrabi", nameRu:"Кольраби Фиолетовая", unit:"tray", unitRu:"лоток", price:14},
+      {id:"amaranth", name:"Red Amaranth", nameRu:"Красный Амарант", unit:"tray", unitRu:"лоток", price:16},
+      {id:"sorrel", name:"Red-Veined Sorrel", nameRu:"Щавель с красной жилкой", unit:"tray", unitRu:"лоток", price:16},
+      {id:"basil", name:"Green Basil", nameRu:"Базилик зелёный", unit:"tray", unitRu:"лоток", price:16},
+      {id:"sunflower", name:"Sunflower", nameRu:"Подсолнечник", unit:"tray", unitRu:"лоток", price:14},
+      {id:"cress", name:"Cress", nameRu:"Кресс-салат", unit:"tray", unitRu:"лоток", price:14},
+      {id:"flowers", name:"Edible Flowers", nameRu:"Съедобные цветы", unit:"tray", unitRu:"лоток", price:35},
+      {id:"kit", name:"\"Five Harvests\" Grow-Your-Own Kit", nameRu:"Набор \"Пять урожаев\"", unit:"kit", unitRu:"набор", price:40}
     ]
   },
   danang: {
@@ -144,7 +146,7 @@ window.MZ_CITIES = {
       {bank:"BIDV — PGD Đông Phan Thiết (VietQR)", holder:"VASILEV SERGEI", iban:"8808314124", qrImage:"images/vietqr-vasilev.jpg"}
     ],
     products: [
-      {id:"pea", name:"Green Pea Shoots", unit:"tray", price:75000}
+      {id:"pea", name:"Green Pea Shoots", nameRu:"Зелёный горошек", unit:"tray", unitRu:"лоток", price:75000}
     ]
   }
 };
@@ -156,6 +158,7 @@ window.MZ_CART_TEXT = {
   addressRequired: "Please enter a delivery address",
   addToCart: "Add to cart",
   inCart: "In cart",
+  companyId: "Company ID",
   payment: "Payment",
   copy: "Copy",
   copied: "Copied",

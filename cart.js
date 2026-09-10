@@ -5,6 +5,16 @@
   var t = window.MZ_CART_TEXT || {};
   var activeCityId = null;
 
+  // Order messages always go out in Russian, whatever language the storefront
+  // is in, so the owner reads every order the same way.
+  var RU = {
+    orderTitle: "Новый заказ Microzelen",
+    total: "Итого",
+    address: "Адрес доставки",
+    payment: "Оплата",
+    companyId: "ID предприятия (юр. лицо)"
+  };
+
   // --- Back-compat single-city mode (used when MZ_CITIES is not provided) ---
   if (!cities) {
     cities = {
@@ -233,23 +243,44 @@
     updateCityButtons();
   }
 
+  var BILINGUAL = !!window.MZ_BILINGUAL_MESSAGE;
+
+  function biLabel(key) {
+    var local = t[key];
+    if (BILINGUAL && local && local !== RU[key]) return local + " / " + RU[key];
+    return RU[key];
+  }
+
+  function biField(local, ru) {
+    if (BILINGUAL && local && ru && local !== ru) return local + " / " + ru;
+    return ru || local;
+  }
+
   function buildOrderText(address) {
     var lines = [];
-    lines.push((t.orderTitle || "New order:") + " (" + (city().label || activeCityId) + ")");
+    lines.push(biLabel("orderTitle") + " (" + (city().label || activeCityId) + ")");
     lines.push("");
     Object.keys(cart).forEach(function (id) {
       var p = productById(id);
       if (!p) return;
-      lines.push("- " + p.name + " x " + cart[id] + " " + p.unit + " = " + fmt(p.price * cart[id]));
+      var name = biField(p.name, p.nameRu);
+      var unit = biField(p.unit, p.unitRu);
+      lines.push("- " + name + " x " + cart[id] + " " + unit + " = " + fmt(p.price * cart[id]));
     });
     lines.push("");
-    lines.push((t.total || "Total") + ": " + fmt(cartTotal()) + " " + city().currency);
+    lines.push(biLabel("total") + ": " + fmt(cartTotal()) + " " + city().currency);
     lines.push("");
-    lines.push((t.address || "Delivery address") + ": " + address);
+    lines.push(biLabel("address") + ": " + address);
+    var companyIdInput = document.getElementById("mz-company-id");
+    var companyId = companyIdInput ? companyIdInput.value.trim() : "";
+    if (companyId) {
+      lines.push("");
+      lines.push(biLabel("companyId") + ": " + companyId);
+    }
     var pay = selectedPayment();
     if (pay) {
       lines.push("");
-      lines.push((t.payment || "Payment") + ": " + pay.bank + " — " + pay.holder + " — " + pay.iban);
+      lines.push(biLabel("payment") + ": " + pay.bank + " — " + pay.holder + " — " + pay.iban);
     }
     return lines.join("\n");
   }

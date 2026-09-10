@@ -96,6 +96,7 @@
   <div id="mz-cart-list"></div>
   <div class="cart-total-row"><span>Tổng cộng</span><span><span id="mz-cart-total">0</span> <span id="mz-cart-currency"></span></span></div>
   <textarea id="mz-address" placeholder="Địa chỉ giao hàng tại Đà Nẵng"></textarea>
+  <input id="mz-company-id" type="text" placeholder="Mã số doanh nghiệp (nếu là công ty, không bắt buộc)">
   <div id="mz-payment-section">
     <p class="mz-payment-note"><strong>Chỉ thanh toán chuyển khoản. Không cần trả tiền cho người giao hàng.</strong></p>
     <div id="mz-payment-list"></div>
@@ -105,6 +106,7 @@
 
 <script>
 window.MZ_DEFAULT_CITY = "danang";
+window.MZ_BILINGUAL_MESSAGE = true;
 window.MZ_CITIES = {
   danang: {
     label: "Đà Nẵng",
@@ -115,7 +117,7 @@ window.MZ_CITIES = {
       {bank:"BIDV — PGD Đông Phan Thiết (VietQR)", holder:"VASILEV SERGEI", iban:"8808314124", qrImage:"images/vietqr-vasilev.jpg"}
     ],
     products: [
-      {id:"pea", name:"Đậu Hà Lan (rau mầm)", unit:"khay", price:75000}
+      {id:"pea", name:"Đậu Hà Lan (rau mầm)", nameRu:"Зелёный горошек", unit:"khay", unitRu:"лоток", price:75000}
     ]
   }
 };
@@ -127,6 +129,7 @@ window.MZ_CART_TEXT = {
   addressRequired: "Vui lòng nhập địa chỉ giao hàng",
   addToCart: "Thêm vào giỏ",
   inCart: "Trong giỏ",
+  companyId: "Mã số doanh nghiệp",
   payment: "Thanh toán",
   copy: "Sao chép",
   copied: "Đã sao chép",

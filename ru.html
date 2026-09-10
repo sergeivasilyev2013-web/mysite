@@ -99,6 +99,7 @@
   <div id="mz-cart-list"></div>
   <div class="cart-total-row"><span>Итого</span><span><span id="mz-cart-total">0.00</span> <span id="mz-cart-currency"></span></span></div>
   <textarea id="mz-address" placeholder="Адрес доставки"></textarea>
+  <input id="mz-company-id" type="text" placeholder="ID предприятия (если юр. лицо, необязательно)">
   <div id="mz-payment-section">
     <p class="mz-payment-note"><strong>Оплата только безналичная. Курьеру платить не нужно.</strong></p>
     <div id="mz-payment-list"></div>
@@ -120,19 +121,19 @@ window.MZ_CITIES = {
       {bank:"TBC", holder:"Sergei Vasilev", iban:"GE54TB7899145064400001"}
     ],
     products: [
-      {id:"pea", name:"Зелёный горошек", unit:"лоток", price:14},
-      {id:"arugula", name:"Руккола", unit:"лоток", price:14},
-      {id:"broccoli", name:"Брокколи", unit:"лоток", price:14},
-      {id:"mizuna", name:"Мизуна", unit:"лоток", price:14},
-      {id:"radish", name:"Редис Триколор", unit:"лоток", price:14},
-      {id:"kohlrabi", name:"Кольраби Фиолетовая", unit:"лоток", price:14},
-      {id:"amaranth", name:"Красный Амарант", unit:"лоток", price:16},
-      {id:"sorrel", name:"Щавель с красной жилкой", unit:"лоток", price:16},
-      {id:"basil", name:"Базилик зелёный", unit:"лоток", price:16},
-      {id:"sunflower", name:"Подсолнечник", unit:"лоток", price:14},
-      {id:"cress", name:"Кресс-салат", unit:"лоток", price:14},
-      {id:"flowers", name:"Съедобные цветы", unit:"лоток", price:35},
-      {id:"kit", name:"Набор \"Пять урожаев\"", unit:"набор", price:40}
+      {id:"pea", name:"Зелёный горошек", nameRu:"Зелёный горошек", unit:"лоток", price:14},
+      {id:"arugula", name:"Руккола", nameRu:"Руккола", unit:"лоток", price:14},
+      {id:"broccoli", name:"Брокколи", nameRu:"Брокколи", unit:"лоток", price:14},
+      {id:"mizuna", name:"Мизуна", nameRu:"Мизуна", unit:"лоток", price:14},
+      {id:"radish", name:"Редис Триколор", nameRu:"Редис Триколор", unit:"лоток", price:14},
+      {id:"kohlrabi", name:"Кольраби Фиолетовая", nameRu:"Кольраби Фиолетовая", unit:"лоток", price:14},
+      {id:"amaranth", name:"Красный Амарант", nameRu:"Красный Амарант", unit:"лоток", price:16},
+      {id:"sorrel", name:"Щавель с красной жилкой", nameRu:"Щавель с красной жилкой", unit:"лоток", price:16},
+      {id:"basil", name:"Базилик зелёный", nameRu:"Базилик зелёный", unit:"лоток", price:16},
+      {id:"sunflower", name:"Подсолнечник", nameRu:"Подсолнечник", unit:"лоток", price:14},
+      {id:"cress", name:"Кресс-салат", nameRu:"Кресс-салат", unit:"лоток", price:14},
+      {id:"flowers", name:"Съедобные цветы", nameRu:"Съедобные цветы", unit:"лоток", price:35},
+      {id:"kit", name:"Набор \"Пять урожаев\"", nameRu:"Набор \"Пять урожаев\"", unit:"набор", price:40}
     ]
   },
   danang: {
@@ -144,7 +145,7 @@ window.MZ_CITIES = {
       {bank:"BIDV — PGD Đông Phan Thiết (VietQR)", holder:"VASILEV SERGEI", iban:"8808314124", qrImage:"images/vietqr-vasilev.jpg"}
     ],
     products: [
-      {id:"pea", name:"Зелёный горошек", unit:"лоток", price:75000}
+      {id:"pea", name:"Зелёный горошек", nameRu:"Зелёный горошек", unit:"лоток", price:75000}
     ]
   }
 };
