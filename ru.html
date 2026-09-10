@@ -24,9 +24,9 @@
   <div class="wrap">
     <h1>Живая микрозелень для ресторанов и кафе</h1>
     <p class="tagline">На корню, не срезанная. С официальной накладной rs.ge на каждую поставку.</p>
-    <div class="cities">
-      <span>🇬🇪 Батуми</span>
-      <span>🇻🇳 Дананг</span>
+    <div class="city-switch">
+      <button type="button" data-city-btn="batumi">🇬🇪 Батуми</button>
+      <button type="button" data-city-btn="danang">🇻🇳 Дананг</button>
     </div>
     <div class="cta">
       <a class="btn primary" href="https://wa.me/995593482218" target="_blank" rel="noopener">Написать в WhatsApp</a>
@@ -59,10 +59,14 @@
 
 <section class="catalog">
   <div class="wrap">
-    <h2>Каталог (Батуми)</h2>
-    <p class="price-note">Цены в лари (₾) за лоток. Актуально на 11.09.2026 — уточняйте наличие.</p>
+    <h2>Каталог</h2>
+    <p class="price-note" data-city-note="batumi">Цены в лари (₾) за лоток. Актуально на 11.09.2026 — уточняйте наличие.</p>
+    <p class="price-note" data-city-note="danang">Цены в донгах (₫) за лоток. Пока в наличии ограниченный ассортимент — расширяем.</p>
     <div class="product-grid" id="mz-product-grid"></div>
-    <p class="price-note" style="margin-top:20px;">Заказы принимаем до 13:00 — доставка в этот же день, после 13:00 — на следующий день. Доставка по Батуми: от 3 лотков бесплатно, меньше — 5 ₾. Документы rs.ge на каждой поставке.</p>
+    <p class="price-note" data-city-note="batumi" style="margin-top:20px;">Заказы принимаем до 13:00 — доставка в этот же день, после 13:00 — на следующий день. Доставка по Батуми: от 3 лотков бесплатно, меньше — 5 ₾. Документы rs.ge на каждой поставке.</p>
+    <p class="price-note" data-city-note="batumi"><strong>Оплата только безналичная, переводом по реквизитам.</strong> Курьеру платить не нужно — выбор банка при оформлении заказа в корзине.</p>
+    <p class="price-note" data-city-note="danang" style="margin-top:20px;">Бесплатная доставка по городу от 3 лотков.</p>
+    <p class="price-note" data-city-note="danang"><strong>Оплата только переводом по QR-коду (VietQR).</strong> Курьеру платить не нужно.</p>
   </div>
 </section>
 
@@ -93,37 +97,71 @@
     <button id="mz-cart-close" type="button">×</button>
   </div>
   <div id="mz-cart-list"></div>
-  <div class="cart-total-row"><span>Итого</span><span>₾<span id="mz-cart-total">0.00</span></span></div>
-  <textarea id="mz-address" placeholder="Адрес доставки в Батуми"></textarea>
-  <button id="mz-checkout-btn" type="button">Оформить заказ в WhatsApp</button>
+  <div class="cart-total-row"><span>Итого</span><span><span id="mz-cart-total">0.00</span> <span id="mz-cart-currency"></span></span></div>
+  <textarea id="mz-address" placeholder="Адрес доставки"></textarea>
+  <div id="mz-payment-section">
+    <p class="mz-payment-note"><strong>Оплата только безналичная. Курьеру платить не нужно.</strong></p>
+    <div id="mz-payment-list"></div>
+  </div>
+  <button id="mz-checkout-btn" type="button">Оформить заказ</button>
 </div>
 
 <script>
-window.MZ_CURRENCY = "₾";
-window.MZ_PRODUCTS = [
-  {id:"pea", name:"Зелёный горошек", unit:"лоток", price:14},
-  {id:"arugula", name:"Руккола", unit:"лоток", price:14},
-  {id:"broccoli", name:"Брокколи", unit:"лоток", price:14},
-  {id:"mizuna", name:"Мизуна", unit:"лоток", price:14},
-  {id:"radish", name:"Редис Триколор", unit:"лоток", price:14},
-  {id:"kohlrabi", name:"Кольраби Фиолетовая", unit:"лоток", price:14},
-  {id:"amaranth", name:"Красный Амарант", unit:"лоток", price:16},
-  {id:"sorrel", name:"Щавель с красной жилкой", unit:"лоток", price:16},
-  {id:"basil", name:"Базилик зелёный", unit:"лоток", price:16},
-  {id:"sunflower", name:"Подсолнечник", unit:"лоток", price:14},
-  {id:"cress", name:"Кресс-салат", unit:"лоток", price:14},
-  {id:"flowers", name:"Съедобные цветы", unit:"лоток", price:35},
-  {id:"kit", name:"Набор \"Пять урожаев\"", unit:"набор", price:40}
-];
-window.MZ_MESSENGER = {type:"whatsapp", number:"995593482218"};
+window.MZ_DEFAULT_CITY = "batumi";
+window.MZ_CITIES = {
+  batumi: {
+    label: "Батуми",
+    currency: "₾",
+    addressPlaceholder: "Адрес доставки в Батуми",
+    messenger: {type:"whatsapp", number:"995593482218"},
+    payments: [
+      {bank:"Credo", holder:"Shevchenko Natalia", iban:"GE39CD0360000037536628"},
+      {bank:"Bank of Georgia (BOG)", holder:"Sergei Vasilev", iban:"GE46BG0000000533441103"},
+      {bank:"TBC", holder:"Sergei Vasilev", iban:"GE54TB7899145064400001"}
+    ],
+    products: [
+      {id:"pea", name:"Зелёный горошек", unit:"лоток", price:14},
+      {id:"arugula", name:"Руккола", unit:"лоток", price:14},
+      {id:"broccoli", name:"Брокколи", unit:"лоток", price:14},
+      {id:"mizuna", name:"Мизуна", unit:"лоток", price:14},
+      {id:"radish", name:"Редис Триколор", unit:"лоток", price:14},
+      {id:"kohlrabi", name:"Кольраби Фиолетовая", unit:"лоток", price:14},
+      {id:"amaranth", name:"Красный Амарант", unit:"лоток", price:16},
+      {id:"sorrel", name:"Щавель с красной жилкой", unit:"лоток", price:16},
+      {id:"basil", name:"Базилик зелёный", unit:"лоток", price:16},
+      {id:"sunflower", name:"Подсолнечник", unit:"лоток", price:14},
+      {id:"cress", name:"Кресс-салат", unit:"лоток", price:14},
+      {id:"flowers", name:"Съедобные цветы", unit:"лоток", price:35},
+      {id:"kit", name:"Набор \"Пять урожаев\"", unit:"набор", price:40}
+    ]
+  },
+  danang: {
+    label: "Дананг",
+    currency: "₫",
+    addressPlaceholder: "Адрес доставки в Дананге",
+    messenger: {type:"zalo", number:"84704711042"},
+    payments: [
+      {bank:"BIDV — PGD Đông Phan Thiết (VietQR)", holder:"VASILEV SERGEI", iban:"8808314124", qrImage:"images/vietqr-vasilev.jpg"}
+    ],
+    products: [
+      {id:"pea", name:"Зелёный горошек", unit:"лоток", price:75000}
+    ]
+  }
+};
 window.MZ_CART_TEXT = {
   empty: "Корзина пуста",
-  orderTitle: "Новый заказ Microzelen:",
+  orderTitle: "Новый заказ Microzelen",
   total: "Итого",
   address: "Адрес доставки",
   addressRequired: "Укажите адрес доставки",
   addToCart: "В корзину",
-  inCart: "В корзине"
+  inCart: "В корзине",
+  payment: "Оплата",
+  copy: "Скопировать",
+  copied: "Скопировано",
+  checkoutWhatsapp: "Оформить заказ в WhatsApp",
+  checkoutZalo: "Оформить заказ в Zalo",
+  zaloCopied: "Текст заказа скопирован — вставьте его в открывшийся чат Zalo."
 };
 </script>
 <script src="cart.js"></script>

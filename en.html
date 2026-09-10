@@ -24,9 +24,9 @@
   <div class="wrap">
     <h1>Living microgreens for restaurants and cafes</h1>
     <p class="tagline">Roots on, never cut. Every delivery ships with an official rs.ge invoice.</p>
-    <div class="cities">
-      <span>🇬🇪 Batumi</span>
-      <span>🇻🇳 Da Nang</span>
+    <div class="city-switch">
+      <button type="button" data-city-btn="batumi">🇬🇪 Batumi</button>
+      <button type="button" data-city-btn="danang">🇻🇳 Da Nang</button>
     </div>
     <div class="cta">
       <a class="btn primary" href="https://wa.me/995593482218" target="_blank" rel="noopener">Message on WhatsApp</a>
@@ -59,10 +59,14 @@
 
 <section class="catalog">
   <div class="wrap">
-    <h2>Catalog (Batumi)</h2>
-    <p class="price-note">Prices in Georgian Lari (₾) per tray. As of 2026-09-11 — confirm availability.</p>
+    <h2>Catalog</h2>
+    <p class="price-note" data-city-note="batumi">Prices in Georgian Lari (₾) per tray. As of 2026-09-11 — confirm availability.</p>
+    <p class="price-note" data-city-note="danang">Prices in Vietnamese Dong (₫) per tray. Range is limited for now — more varieties coming soon.</p>
     <div class="product-grid" id="mz-product-grid"></div>
-    <p class="price-note" style="margin-top:20px;">Orders placed before 1:00 PM ship same day; after 1:00 PM ship the next day. Delivery in Batumi: free from 3 trays, otherwise 5 ₾. An rs.ge document comes with every delivery.</p>
+    <p class="price-note" data-city-note="batumi" style="margin-top:20px;">Orders placed before 1:00 PM ship same day; after 1:00 PM ship the next day. Delivery in Batumi: free from 3 trays, otherwise 5 ₾. An rs.ge document comes with every delivery.</p>
+    <p class="price-note" data-city-note="batumi"><strong>Bank transfer only, no cash.</strong> Nothing to pay the courier — pick a bank when you check out.</p>
+    <p class="price-note" data-city-note="danang" style="margin-top:20px;">Free delivery in the city from 3 trays.</p>
+    <p class="price-note" data-city-note="danang"><strong>Payment by VietQR bank transfer only.</strong> Nothing to pay the courier.</p>
   </div>
 </section>
 
@@ -93,37 +97,71 @@
     <button id="mz-cart-close" type="button">×</button>
   </div>
   <div id="mz-cart-list"></div>
-  <div class="cart-total-row"><span>Total</span><span>₾<span id="mz-cart-total">0.00</span></span></div>
-  <textarea id="mz-address" placeholder="Delivery address in Batumi"></textarea>
-  <button id="mz-checkout-btn" type="button">Send order via WhatsApp</button>
+  <div class="cart-total-row"><span>Total</span><span><span id="mz-cart-total">0.00</span> <span id="mz-cart-currency"></span></span></div>
+  <textarea id="mz-address" placeholder="Delivery address"></textarea>
+  <div id="mz-payment-section">
+    <p class="mz-payment-note"><strong>Bank transfer only, no cash. Nothing to pay the courier.</strong></p>
+    <div id="mz-payment-list"></div>
+  </div>
+  <button id="mz-checkout-btn" type="button">Send order</button>
 </div>
 
 <script>
-window.MZ_CURRENCY = "₾";
-window.MZ_PRODUCTS = [
-  {id:"pea", name:"Green Pea Shoots", unit:"tray", price:14},
-  {id:"arugula", name:"Arugula", unit:"tray", price:14},
-  {id:"broccoli", name:"Broccoli", unit:"tray", price:14},
-  {id:"mizuna", name:"Mizuna", unit:"tray", price:14},
-  {id:"radish", name:"Tricolor Radish", unit:"tray", price:14},
-  {id:"kohlrabi", name:"Purple Kohlrabi", unit:"tray", price:14},
-  {id:"amaranth", name:"Red Amaranth", unit:"tray", price:16},
-  {id:"sorrel", name:"Red-Veined Sorrel", unit:"tray", price:16},
-  {id:"basil", name:"Green Basil", unit:"tray", price:16},
-  {id:"sunflower", name:"Sunflower", unit:"tray", price:14},
-  {id:"cress", name:"Cress", unit:"tray", price:14},
-  {id:"flowers", name:"Edible Flowers", unit:"tray", price:35},
-  {id:"kit", name:"\"Five Harvests\" Grow-Your-Own Kit", unit:"kit", price:40}
-];
-window.MZ_MESSENGER = {type:"whatsapp", number:"995593482218"};
+window.MZ_DEFAULT_CITY = "batumi";
+window.MZ_CITIES = {
+  batumi: {
+    label: "Batumi",
+    currency: "₾",
+    addressPlaceholder: "Delivery address in Batumi",
+    messenger: {type:"whatsapp", number:"995593482218"},
+    payments: [
+      {bank:"Credo", holder:"Shevchenko Natalia", iban:"GE39CD0360000037536628"},
+      {bank:"Bank of Georgia (BOG)", holder:"Sergei Vasilev", iban:"GE46BG0000000533441103"},
+      {bank:"TBC", holder:"Sergei Vasilev", iban:"GE54TB7899145064400001"}
+    ],
+    products: [
+      {id:"pea", name:"Green Pea Shoots", unit:"tray", price:14},
+      {id:"arugula", name:"Arugula", unit:"tray", price:14},
+      {id:"broccoli", name:"Broccoli", unit:"tray", price:14},
+      {id:"mizuna", name:"Mizuna", unit:"tray", price:14},
+      {id:"radish", name:"Tricolor Radish", unit:"tray", price:14},
+      {id:"kohlrabi", name:"Purple Kohlrabi", unit:"tray", price:14},
+      {id:"amaranth", name:"Red Amaranth", unit:"tray", price:16},
+      {id:"sorrel", name:"Red-Veined Sorrel", unit:"tray", price:16},
+      {id:"basil", name:"Green Basil", unit:"tray", price:16},
+      {id:"sunflower", name:"Sunflower", unit:"tray", price:14},
+      {id:"cress", name:"Cress", unit:"tray", price:14},
+      {id:"flowers", name:"Edible Flowers", unit:"tray", price:35},
+      {id:"kit", name:"\"Five Harvests\" Grow-Your-Own Kit", unit:"kit", price:40}
+    ]
+  },
+  danang: {
+    label: "Da Nang",
+    currency: "₫",
+    addressPlaceholder: "Delivery address in Da Nang",
+    messenger: {type:"zalo", number:"84704711042"},
+    payments: [
+      {bank:"BIDV — PGD Đông Phan Thiết (VietQR)", holder:"VASILEV SERGEI", iban:"8808314124", qrImage:"images/vietqr-vasilev.jpg"}
+    ],
+    products: [
+      {id:"pea", name:"Green Pea Shoots", unit:"tray", price:75000}
+    ]
+  }
+};
 window.MZ_CART_TEXT = {
   empty: "Cart is empty",
-  orderTitle: "New Microzelen order:",
+  orderTitle: "New Microzelen order",
   total: "Total",
   address: "Delivery address",
   addressRequired: "Please enter a delivery address",
   addToCart: "Add to cart",
-  inCart: "In cart"
+  inCart: "In cart",
+  payment: "Payment",
+  copy: "Copy",
+  copied: "Copied",
+  checkoutWhatsapp: "Send order via WhatsApp",
+  checkoutZalo: "Send order via Zalo",
+  zaloCopied: "Order text copied — paste it into the Zalo chat that just opened."
 };
 </script>
 <script src="cart.js"></script>

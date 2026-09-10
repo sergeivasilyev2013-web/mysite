@@ -63,6 +63,7 @@
     <p class="price-note">Giá theo đồng Việt Nam (₫) mỗi khay. Cập nhật 11.09.2026 — hàng hiện còn hạn chế, sẽ bổ sung thêm loại rau mầm sớm.</p>
     <div class="product-grid" id="mz-product-grid"></div>
     <p class="price-note" style="margin-top:20px;">Miễn phí giao hàng nội thành từ 3 khay trở lên.</p>
+    <p class="price-note"><strong>Chỉ thanh toán chuyển khoản qua VietQR.</strong> Không cần trả tiền cho người giao hàng.</p>
   </div>
 </section>
 
@@ -93,25 +94,43 @@
     <button id="mz-cart-close" type="button">×</button>
   </div>
   <div id="mz-cart-list"></div>
-  <div class="cart-total-row"><span>Tổng cộng</span><span><span id="mz-cart-total">0</span> ₫</span></div>
+  <div class="cart-total-row"><span>Tổng cộng</span><span><span id="mz-cart-total">0</span> <span id="mz-cart-currency"></span></span></div>
   <textarea id="mz-address" placeholder="Địa chỉ giao hàng tại Đà Nẵng"></textarea>
-  <button id="mz-checkout-btn" type="button">Gửi đơn hàng qua Zalo</button>
+  <div id="mz-payment-section">
+    <p class="mz-payment-note"><strong>Chỉ thanh toán chuyển khoản. Không cần trả tiền cho người giao hàng.</strong></p>
+    <div id="mz-payment-list"></div>
+  </div>
+  <button id="mz-checkout-btn" type="button">Gửi đơn hàng</button>
 </div>
 
 <script>
-window.MZ_CURRENCY = "₫";
-window.MZ_PRODUCTS = [
-  {id:"pea", name:"Đậu Hà Lan (rau mầm)", unit:"khay", price:75000}
-];
-window.MZ_MESSENGER = {type:"zalo", number:"84704711042"};
+window.MZ_DEFAULT_CITY = "danang";
+window.MZ_CITIES = {
+  danang: {
+    label: "Đà Nẵng",
+    currency: "₫",
+    addressPlaceholder: "Địa chỉ giao hàng tại Đà Nẵng",
+    messenger: {type:"zalo", number:"84704711042"},
+    payments: [
+      {bank:"BIDV — PGD Đông Phan Thiết (VietQR)", holder:"VASILEV SERGEI", iban:"8808314124", qrImage:"images/vietqr-vasilev.jpg"}
+    ],
+    products: [
+      {id:"pea", name:"Đậu Hà Lan (rau mầm)", unit:"khay", price:75000}
+    ]
+  }
+};
 window.MZ_CART_TEXT = {
   empty: "Giỏ hàng trống",
-  orderTitle: "Đơn hàng Microzelen mới:",
+  orderTitle: "Đơn hàng Microzelen mới",
   total: "Tổng cộng",
   address: "Địa chỉ giao hàng",
   addressRequired: "Vui lòng nhập địa chỉ giao hàng",
   addToCart: "Thêm vào giỏ",
   inCart: "Trong giỏ",
+  payment: "Thanh toán",
+  copy: "Sao chép",
+  copied: "Đã sao chép",
+  checkoutZalo: "Gửi đơn hàng qua Zalo",
   zaloCopied: "Đã sao chép nội dung đơn hàng — dán vào khung chat Zalo vừa mở."
 };
 </script>
