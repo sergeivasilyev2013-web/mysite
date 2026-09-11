@@ -5,6 +5,13 @@
   var t = window.MZ_CART_TEXT || {};
   var activeCityId = null;
 
+  // Gift promo (free delivery + a bonus tray) runs through the end of
+  // September; past this it self-disables without needing a manual removal.
+  var PROMO_END = new Date("2026-10-01T00:00:00");
+  function promoActive() {
+    return new Date() < PROMO_END;
+  }
+
   // Order messages always go out in Russian, whatever language the storefront
   // is in, so the owner reads every order the same way.
   var RU = {
@@ -77,9 +84,37 @@
     return null;
   }
 
+  // Weight items (sold by the gram, e.g. Mash) store grams in cart[id]
+  // instead of a tray count, so they need their own accounting everywhere
+  // quantity or price is derived from the cart.
+  function isWeightItem(p) {
+    return !!(p && p.saleType === "weight");
+  }
+
+  function lineTotal(p, qty) {
+    return isWeightItem(p) ? (p.pricePer100 * qty) / 100 : p.price * qty;
+  }
+
+  // Badge / empty-cart checks: a weight item counts as one line, not by
+  // gram count, so the cart icon never shows a raw gram number.
   function cartCount() {
     var n = 0;
-    for (var id in cart) n += cart[id];
+    for (var id in cart) {
+      var p = productById(id);
+      n += isWeightItem(p) ? 1 : cart[id];
+    }
+    return n;
+  }
+
+  // Trays only — used for the free-delivery / gift-box threshold. Weight
+  // items aren't sold by the tray, so they never count toward it.
+  function trayCount() {
+    var n = 0;
+    for (var id in cart) {
+      var p = productById(id);
+      if (isWeightItem(p)) continue;
+      n += cart[id];
+    }
     return n;
   }
 
@@ -87,9 +122,16 @@
     var sum = 0;
     for (var id in cart) {
       var p = productById(id);
-      if (p) sum += p.price * cart[id];
+      if (p) sum += lineTotal(p, cart[id]);
     }
     return sum;
+  }
+
+  function meetsPromoThreshold() {
+    var c = city();
+    var meetsCount = c.freeDeliveryMinCount && trayCount() >= c.freeDeliveryMinCount;
+    var meetsTotal = c.freeDeliveryMinTotal && cartTotal() >= c.freeDeliveryMinTotal;
+    return !!(meetsCount || meetsTotal);
   }
 
   function fmt(n) {
@@ -99,9 +141,7 @@
   function deliveryFee() {
     var c = city();
     if (!c.deliveryFee || cartCount() === 0) return 0;
-    var meetsCount = c.freeDeliveryMinCount && cartCount() >= c.freeDeliveryMinCount;
-    var meetsTotal = c.freeDeliveryMinTotal && cartTotal() >= c.freeDeliveryMinTotal;
-    if (meetsCount || meetsTotal) return 0;
+    if (meetsPromoThreshold()) return 0;
     return c.deliveryFee;
   }
 
@@ -137,6 +177,34 @@
     renderCartPanel();
   }
 
+  function setWeight(id, grams) {
+    var p = productById(id);
+    if (!p) return;
+    var min = p.minGrams || 100;
+    var step = p.stepGrams || 50;
+    grams = Math.round(grams / step) * step;
+    if (grams < min) grams = min;
+    cart[id] = grams;
+    saveCart();
+    renderBadge();
+    renderQty(id);
+    renderCartPanel();
+  }
+
+  function adjustWeight(id, dir) {
+    var p = productById(id);
+    if (!p) return;
+    var step = p.stepGrams || 50;
+    var min = p.minGrams || 100;
+    var grams = (cart[id] || 0) + dir * step;
+    if (grams < min) delete cart[id];
+    else cart[id] = grams;
+    saveCart();
+    renderBadge();
+    renderQty(id);
+    renderCartPanel();
+  }
+
   function renderCartPanel() {
     var list = document.getElementById("mz-cart-list");
     var totalEl = document.getElementById("mz-cart-total");
@@ -151,14 +219,17 @@
         if (!p) return;
         var row = document.createElement("div");
         row.className = "mz-cart-row";
+        var decAction = isWeightItem(p) ? "dec-weight" : "dec";
+        var incAction = isWeightItem(p) ? "inc-weight" : "inc";
+        var qtyLabel = isWeightItem(p) ? cart[id] + " " + p.unit : cart[id];
         row.innerHTML =
           '<span class="mz-cart-row-name">' + p.name + "</span>" +
           '<span class="mz-cart-row-qty">' +
-            '<button type="button" class="mz-qty-btn" data-action="dec" data-id="' + id + '">-</button>' +
-            '<span class="mz-qty-val">' + cart[id] + "</span>" +
-            '<button type="button" class="mz-qty-btn" data-action="inc" data-id="' + id + '">+</button>' +
+            '<button type="button" class="mz-qty-btn" data-action="' + decAction + '" data-id="' + id + '">-</button>' +
+            '<span class="mz-qty-val">' + qtyLabel + "</span>" +
+            '<button type="button" class="mz-qty-btn" data-action="' + incAction + '" data-id="' + id + '">+</button>' +
           "</span>" +
-          '<span class="mz-cart-row-price">' + fmt(p.price * cart[id]) + "</span>";
+          '<span class="mz-cart-row-price">' + fmt(lineTotal(p, cart[id])) + "</span>";
         list.appendChild(row);
       });
     }
@@ -181,9 +252,29 @@
       }
     }
 
+    renderGiftSection();
     renderMessengerSection();
     renderPaymentSection();
     updateCheckoutLabel();
+  }
+
+  function renderGiftSection() {
+    var wrap = document.getElementById("mz-gift-section");
+    if (!wrap) return;
+    var c = city();
+    if (!c.giftPromo || !promoActive()) {
+      wrap.hidden = true;
+      return;
+    }
+    wrap.hidden = false;
+    var eligible = meetsPromoThreshold();
+    var checkbox = document.getElementById("mz-gift-checkbox");
+    var row = document.getElementById("mz-gift-row");
+    if (checkbox) {
+      checkbox.disabled = !eligible;
+      if (!eligible) checkbox.checked = false;
+    }
+    if (row) row.classList.toggle("disabled", !eligible);
   }
 
   function cityMessengers() {
@@ -296,15 +387,26 @@
       card.className = "product-card";
       var imgHtml = p.image ? '<img class="product-photo" src="' + p.image + '" alt="' + p.name + '" loading="lazy">' : "";
       var descHtml = p.desc ? '<div class="desc">' + p.desc + "</div>" : "";
-      card.innerHTML =
-        imgHtml +
-        '<div class="name">' + p.name + "</div>" +
-        descHtml +
-        '<div class="price">' + fmt(p.price) + " " + city().currency + " / " + p.unit + "</div>" +
-        '<div class="add-row">' +
-          '<button type="button" class="add-btn" data-add-to-cart="' + p.id + '">' + (t.addToCart || "Add to cart") + "</button>" +
-          '<span class="in-cart">' + (t.inCart || "In cart") + ': <span data-qty-for="' + p.id + '">0</span></span>' +
-        "</div>";
+      var priceHtml, addRowHtml;
+      if (isWeightItem(p)) {
+        var minG = p.minGrams || 100;
+        var stepG = p.stepGrams || 50;
+        priceHtml = '<div class="price">' + fmt(p.pricePer100) + " " + city().currency + " / 100 " + p.unit + "</div>";
+        addRowHtml =
+          '<div class="add-row weight-row">' +
+            '<input type="number" class="weight-input" data-weight-for="' + p.id + '" min="' + minG + '" step="' + stepG + '" value="' + minG + '">' +
+            '<button type="button" class="add-btn" data-add-weight="' + p.id + '">' + (t.addToCart || "Add to cart") + "</button>" +
+          "</div>" +
+          '<span class="in-cart">' + (t.inCart || "In cart") + ': <span data-qty-for="' + p.id + '">0</span> ' + p.unit + "</span>";
+      } else {
+        priceHtml = '<div class="price">' + fmt(p.price) + " " + city().currency + " / " + p.unit + "</div>";
+        addRowHtml =
+          '<div class="add-row">' +
+            '<button type="button" class="add-btn" data-add-to-cart="' + p.id + '">' + (t.addToCart || "Add to cart") + "</button>" +
+            '<span class="in-cart">' + (t.inCart || "In cart") + ': <span data-qty-for="' + p.id + '">0</span></span>' +
+          "</div>";
+      }
+      card.innerHTML = imgHtml + '<div class="name">' + p.name + "</div>" + descHtml + priceHtml + addRowHtml;
       grid.appendChild(card);
     });
   }
@@ -498,6 +600,11 @@
     document.querySelectorAll("[data-city-note]").forEach(function (el) {
       el.hidden = el.getAttribute("data-city-note") !== activeCityId;
     });
+    // The promo banner is also city-scoped via data-city-note, but it must
+    // additionally disappear for good once the promo ends, even after a
+    // later city switch would otherwise re-show it.
+    var promoBanner = document.getElementById("mz-promo-banner");
+    if (promoBanner && !promoActive()) promoBanner.hidden = true;
   }
 
   function setCity(id) {
@@ -542,7 +649,11 @@
       if (!p) return;
       var name = biField(p.name, p.nameRu);
       var unit = biField(p.unit, p.unitRu);
-      lines.push("- " + name + " x " + cart[id] + " " + unit + " = " + fmt(p.price * cart[id]));
+      if (isWeightItem(p)) {
+        lines.push("- " + name + " " + cart[id] + " " + unit + " = " + fmt(lineTotal(p, cart[id])));
+      } else {
+        lines.push("- " + name + " x " + cart[id] + " " + unit + " = " + fmt(lineTotal(p, cart[id])));
+      }
     });
     lines.push("");
     var fee = deliveryFee();
@@ -563,6 +674,11 @@
     if (pay) {
       lines.push("");
       lines.push(biLabel("payment") + ": " + pay.bank + " — " + pay.holder + " — " + pay.iban);
+    }
+    var giftCheckbox = document.getElementById("mz-gift-checkbox");
+    if (giftCheckbox && giftCheckbox.checked && !giftCheckbox.disabled) {
+      lines.push("");
+      lines.push("🎁 Клиент хочет подарочный бокс (акция, лоток ≤14 ₾ на ваш выбор)");
     }
     return lines.join("\n");
   }
@@ -755,11 +871,23 @@
       addItem(addBtn.getAttribute("data-add-to-cart"));
       return;
     }
+    var addWeightBtn = e.target.closest("[data-add-weight]");
+    if (addWeightBtn) {
+      var wid = addWeightBtn.getAttribute("data-add-weight");
+      var input = document.querySelector('[data-weight-for="' + wid + '"]');
+      var grams = input ? parseInt(input.value, 10) : 0;
+      if (!grams) grams = productById(wid) ? productById(wid).minGrams || 100 : 100;
+      setWeight(wid, grams);
+      return;
+    }
     var qtyBtn = e.target.closest(".mz-qty-btn");
     if (qtyBtn) {
       var id = qtyBtn.getAttribute("data-id");
-      if (qtyBtn.getAttribute("data-action") === "inc") addItem(id);
-      else removeItem(id);
+      var action = qtyBtn.getAttribute("data-action");
+      if (action === "inc") addItem(id);
+      else if (action === "dec") removeItem(id);
+      else if (action === "inc-weight") adjustWeight(id, 1);
+      else if (action === "dec-weight") adjustWeight(id, -1);
       return;
     }
     if (e.target.closest("#mz-cart-toggle")) {

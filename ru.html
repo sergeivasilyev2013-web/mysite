@@ -48,6 +48,15 @@
   </div>
 </section>
 
+<section class="promo" id="mz-promo-banner" data-city-note="batumi">
+  <div class="wrap">
+    <div class="inner">
+      <h2>🎁🎁 Два подарка на каждый заказ — до конца сентября</h2>
+      <p>Бесплатная доставка + бокс микрозелени в подарок (на наш выбор) — на заказе от 3 лотков или от 42 ₾. Отметьте «Хочу подарок» в корзине.</p>
+    </div>
+  </div>
+</section>
+
 <section class="usp">
   <div class="wrap">
     <div class="grid">
@@ -188,6 +197,13 @@
   <div id="mz-cart-list"></div>
   <div id="mz-delivery-row" class="cart-total-row" hidden><span>Доставка<br><small id="mz-delivery-note" style="font-weight:400;color:var(--muted);"></small></span><span id="mz-delivery-fee">0</span></div>
   <div class="cart-total-row"><span>Итого</span><span><span id="mz-cart-total">0.00</span> <span id="mz-cart-currency"></span></span></div>
+  <div id="mz-gift-section" hidden>
+    <label id="mz-gift-row" class="mz-gift-row">
+      <input type="checkbox" id="mz-gift-checkbox">
+      <span>🎁 Хочу подарок — бокс микрозелени (на наш выбор)</span>
+    </label>
+    <small class="mz-gift-hint">Действует на заказе от 3 лотков или от 42 ₾, до конца сентября</small>
+  </div>
   <textarea id="mz-address" placeholder="Адрес доставки"></textarea>
   <button type="button" id="mz-pick-on-map" class="mz-map-btn">📍 Указать на карте</button>
   <input id="mz-company-id" type="text" placeholder="ID предприятия (если юр. лицо, необязательно)">
@@ -215,6 +231,7 @@ window.MZ_CITIES = {
     freeDeliveryMinCount: 3,
     freeDeliveryMinTotal: 42,
     deliveryFee: 5,
+    giftPromo: true,
     messengers: [
       {type:"whatsapp", number:"995593482218", label:"WhatsApp"},
       {type:"telegram", username:"microzelen_batumi_DaNangvn", label:"Telegram"}
@@ -237,7 +254,7 @@ window.MZ_CITIES = {
       {id:"sunflower", name:"Подсолнечник", nameRu:"Подсолнечник", unit:"лоток", image:"images/sunflower.jpg", price:14},
       {id:"cress", name:"Кресс-салат", nameRu:"Кресс-салат", unit:"лоток", image:"images/cress.jpg", price:14},
       {id:"flowers", name:"Съедобные цветы", nameRu:"Съедобные цветы", unit:"лоток", price:35, desc:"Ассортимент сезонный и постоянно меняется, поэтому фото пока нет — уточняйте, что есть в наличии."},
-      {id:"mash", name:"Проростки Маш", nameRu:"Проростки Маш", unit:"100 г", image:"images/mash.jpg", price:4},
+      {id:"mash", name:"Проростки Маш", nameRu:"Проростки Маш", unit:"г", image:"images/mash.jpg", saleType:"weight", pricePer100:4, minGrams:100, stepGrams:50},
       {id:"kit", name:"Набор \"Пять урожаев\"", nameRu:"Набор \"Пять урожаев\"", unit:"набор", desc:"Всё для проращивания дома: 5 субстратов, 5 видов семян, 5 лотков. Хватает на 5 урожаев. Обучение и экскурсии на ферму не входят, но справится и новичок.", price:40}
     ]
   },

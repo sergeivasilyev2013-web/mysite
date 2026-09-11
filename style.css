@@ -262,6 +262,31 @@ div.card-detail-img {
   font-size: 0.9rem;
 }
 
+section.promo {
+  padding: 0 0 24px;
+}
+
+section.promo .inner {
+  background: rgba(178, 34, 52, 0.08);
+  border: 1px solid rgba(178, 34, 52, 0.25);
+  border-radius: 16px;
+  padding: 22px 24px;
+  text-align: center;
+}
+
+section.promo h2 {
+  margin: 0 0 8px;
+  font-size: 1.2rem;
+  color: #7a1f2b;
+}
+
+section.promo p {
+  max-width: 560px;
+  margin: 0 auto;
+  color: var(--ink);
+  font-size: 0.95rem;
+}
+
 section.about {
   padding: 20px 0 48px;
   text-align: center;
@@ -501,6 +526,44 @@ section.catalog .price-note {
 .product-card .in-cart {
   font-size: 0.85rem;
   color: var(--muted);
+}
+
+.product-card .weight-row {
+  gap: 8px;
+}
+
+.weight-input {
+  width: 80px;
+  min-width: 0;
+  padding: 8px 8px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-family: inherit;
+}
+
+.mz-gift-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 6px;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.mz-gift-row.disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.mz-gift-hint {
+  display: block;
+  margin: -2px 0 10px;
+  color: var(--muted);
+  font-size: 0.78rem;
 }
 
 #mz-cart-toggle {

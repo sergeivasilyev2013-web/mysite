@@ -48,6 +48,15 @@
   </div>
 </section>
 
+<section class="promo" id="mz-promo-banner">
+  <div class="wrap">
+    <div class="inner">
+      <h2>🎁🎁 ორი საჩუქარი ყოველ შეკვეთაზე — სექტემბრის ბოლომდე</h2>
+      <p>უფასო მიწოდება + მიკროველანდის ლანგარი საჩუქრად (ჩვენი არჩევანით) — 3 ლანგარზე ან 42 ₾-ზე მეტ შეკვეთაზე. მონიშნეთ „მინდა საჩუქარი" კალათაში.</p>
+    </div>
+  </div>
+</section>
+
 <section class="usp">
   <div class="wrap">
     <div class="grid">
@@ -183,6 +192,13 @@
   <div id="mz-cart-list"></div>
   <div id="mz-delivery-row" class="cart-total-row" hidden><span>მიწოდება<br><small id="mz-delivery-note" style="font-weight:400;color:var(--muted);"></small></span><span id="mz-delivery-fee">0</span></div>
   <div class="cart-total-row"><span>ჯამი</span><span><span id="mz-cart-total">0.00</span> <span id="mz-cart-currency"></span></span></div>
+  <div id="mz-gift-section" hidden>
+    <label id="mz-gift-row" class="mz-gift-row">
+      <input type="checkbox" id="mz-gift-checkbox">
+      <span>🎁 მინდა საჩუქარი — მიკროველანდის ლანგარი (ჩვენი არჩევანით)</span>
+    </label>
+    <small class="mz-gift-hint">მოქმედებს 3 ლანგარზე ან 42 ₾-ზე მეტ შეკვეთაზე, სექტემბრის ბოლომდე</small>
+  </div>
   <textarea id="mz-address" placeholder="მიწოდების მისამართი ბათუმში"></textarea>
   <button type="button" id="mz-pick-on-map" class="mz-map-btn">📍 რუკაზე მითითება</button>
   <input id="mz-company-id" type="text" placeholder="საიდენტიფიკაციო კოდი (იურ. პირისთვის, არასავალდებულო)">
@@ -211,6 +227,7 @@ window.MZ_CITIES = {
     freeDeliveryMinCount: 3,
     freeDeliveryMinTotal: 42,
     deliveryFee: 5,
+    giftPromo: true,
     messengers: [
       {type:"whatsapp", number:"995593482218", label:"WhatsApp"},
       {type:"telegram", username:"microzelen_batumi_DaNangvn", label:"Telegram"}
@@ -233,7 +250,7 @@ window.MZ_CITIES = {
       {id:"sunflower", name:"მზესუმზირა", nameRu:"Подсолнечник", unit:"ლანგარი", unitRu:"лоток", image:"images/sunflower.jpg", price:14},
       {id:"cress", name:"კრესის სალათი", nameRu:"Кресс-салат", unit:"ლანგარი", unitRu:"лоток", image:"images/cress.jpg", price:14},
       {id:"flowers", name:"საჭმელი ყვავილები", nameRu:"Съедобные цветы", unit:"ლანგარი", unitRu:"лоток", price:35, desc:"ასორტიმენტი სეზონურია და მუდმივად იცვლება, ამიტომ ფოტო ჯერ არ არის — მოგვწერეთ, რა გვაქვს ამჟამად."},
-      {id:"mash", name:"მაშის ღივები", nameRu:"Проростки Маш", unit:"100 გ", unitRu:"100 г", image:"images/mash.jpg", price:4},
+      {id:"mash", name:"მაშის ღივები", nameRu:"Проростки Маш", unit:"გ", unitRu:"г", image:"images/mash.jpg", saleType:"weight", pricePer100:4, minGrams:100, stepGrams:50},
       {id:"kit", name:"ნაკრები \"ხუთი მოსავალი\"", nameRu:"Набор \"Пять урожаев\"", unit:"ნაკრები", unitRu:"набор", desc:"ყველაფერი სახლში მოსაყვანად: 5 სუბსტრატი, 5 სახეობის თესლი, 5 ლანგარი. საკმარისია 5 მოსავლისთვის. ტრენინგი და ფერმაზე ექსკურსია არ შედის, მაგრამ მარტივია დამწყებთათვისაც.", price:40}
     ]
   }

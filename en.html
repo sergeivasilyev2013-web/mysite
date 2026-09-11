@@ -48,6 +48,15 @@
   </div>
 </section>
 
+<section class="promo" id="mz-promo-banner" data-city-note="batumi">
+  <div class="wrap">
+    <div class="inner">
+      <h2>🎁🎁 Two gifts on every order — through end of September</h2>
+      <p>Free delivery + a bonus tray of microgreens (our pick) — on orders from 3 trays or 42 ₾. Check "I'd like the gift" in the cart.</p>
+    </div>
+  </div>
+</section>
+
 <section class="usp">
   <div class="wrap">
     <div class="grid">
@@ -188,6 +197,13 @@
   <div id="mz-cart-list"></div>
   <div id="mz-delivery-row" class="cart-total-row" hidden><span>Delivery<br><small id="mz-delivery-note" style="font-weight:400;color:var(--muted);"></small></span><span id="mz-delivery-fee">0</span></div>
   <div class="cart-total-row"><span>Total</span><span><span id="mz-cart-total">0.00</span> <span id="mz-cart-currency"></span></span></div>
+  <div id="mz-gift-section" hidden>
+    <label id="mz-gift-row" class="mz-gift-row">
+      <input type="checkbox" id="mz-gift-checkbox">
+      <span>🎁 I'd like the gift — a tray of microgreens (our pick)</span>
+    </label>
+    <small class="mz-gift-hint">Available on orders from 3 trays or 42 ₾, through the end of September</small>
+  </div>
   <textarea id="mz-address" placeholder="Delivery address"></textarea>
   <button type="button" id="mz-pick-on-map" class="mz-map-btn">📍 Pick on map</button>
   <input id="mz-company-id" type="text" placeholder="Company ID (if a business, optional)">
@@ -216,6 +232,7 @@ window.MZ_CITIES = {
     freeDeliveryMinCount: 3,
     freeDeliveryMinTotal: 42,
     deliveryFee: 5,
+    giftPromo: true,
     messengers: [
       {type:"whatsapp", number:"995593482218", label:"WhatsApp"},
       {type:"telegram", username:"microzelen_batumi_DaNangvn", label:"Telegram"}
@@ -238,7 +255,7 @@ window.MZ_CITIES = {
       {id:"sunflower", name:"Sunflower", nameRu:"Подсолнечник", unit:"tray", unitRu:"лоток", image:"images/sunflower.jpg", price:14},
       {id:"cress", name:"Cress", nameRu:"Кресс-салат", unit:"tray", unitRu:"лоток", image:"images/cress.jpg", price:14},
       {id:"flowers", name:"Edible Flowers", nameRu:"Съедобные цветы", unit:"tray", unitRu:"лоток", price:35, desc:"The mix is seasonal and keeps changing, so there's no fixed photo yet — ask us what's currently available."},
-      {id:"mash", name:"Mung Bean Sprouts", nameRu:"Проростки Маш", unit:"100 g", unitRu:"100 г", image:"images/mash.jpg", price:4},
+      {id:"mash", name:"Mung Bean Sprouts", nameRu:"Проростки Маш", unit:"g", unitRu:"г", image:"images/mash.jpg", saleType:"weight", pricePer100:4, minGrams:100, stepGrams:50},
       {id:"kit", name:"\"Five Harvests\" Grow-Your-Own Kit", nameRu:"Набор \"Пять урожаев\"", unit:"kit", unitRu:"набор", desc:"Everything to grow at home: 5 substrates, 5 seed varieties, 5 trays. Enough for 5 harvests. No training or farm tours included, but simple enough for a first try.", price:40}
     ]
   },
