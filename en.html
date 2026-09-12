@@ -129,6 +129,24 @@
   </div>
 </section>
 
+<section class="club" data-city-note="batumi">
+  <div class="wrap">
+    <div class="inner">
+      <span class="kicker">Club card</span>
+      <h2>10 ₾ once — a discount forever</h2>
+      <p>Get a Microzelen club card for a one-time 10 ₾ and every order comes with:</p>
+      <div class="perks">
+        <span>✓ 10% off every order</span>
+        <span>✓ Always free delivery</span>
+      </div>
+      <form onsubmit="return false;">
+        <input type="text" id="mz-club-name" placeholder="Your name">
+        <button type="button" id="mz-club-signup-btn" class="btn gold">Get the card</button>
+      </form>
+    </div>
+  </div>
+</section>
+
 <section class="about">
   <div class="wrap">
     <h2>About us</h2>
@@ -195,8 +213,12 @@
     <button id="mz-cart-close" type="button">×</button>
   </div>
   <div id="mz-cart-list"></div>
+  <div id="mz-discount-row" class="cart-total-row" hidden><span>Club card discount (10%)</span><span id="mz-discount-amount">0</span></div>
   <div id="mz-delivery-row" class="cart-total-row" hidden><span>Delivery<br><small id="mz-delivery-note" style="font-weight:400;color:var(--muted);"></small></span><span id="mz-delivery-fee">0</span></div>
   <div class="cart-total-row"><span>Total</span><span><span id="mz-cart-total">0.00</span> <span id="mz-cart-currency"></span></span></div>
+  <div id="mz-club-card-section" hidden>
+    <input id="mz-club-card" type="text" placeholder="Club card number (if you have one)">
+  </div>
   <div id="mz-gift-section" hidden>
     <label id="mz-gift-row" class="mz-gift-row">
       <input type="checkbox" id="mz-gift-checkbox">
@@ -233,6 +255,7 @@ window.MZ_CITIES = {
     freeDeliveryMinTotal: 42,
     deliveryFee: 5,
     giftPromo: true,
+    clubCard: true,
     messengers: [
       {type:"whatsapp", number:"995593482218", label:"WhatsApp"},
       {type:"telegram", username:"microzelen_batumi_DaNangvn", label:"Telegram"}
@@ -282,6 +305,7 @@ window.MZ_CITIES = {
 };
 window.MZ_CART_TEXT = {
   empty: "Cart is empty",
+  clubNameRequired: "Please enter your name",
   orderTitle: "New Microzelen order",
   total: "Total",
   address: "Delivery address",

@@ -129,6 +129,24 @@
   </div>
 </section>
 
+<section class="club" data-city-note="batumi">
+  <div class="wrap">
+    <div class="inner">
+      <span class="kicker">Клубная карта</span>
+      <h2>10 ₾ разово — и скидка навсегда</h2>
+      <p>Оформите клубную карту Microzelen один раз за 10 ₾ и получайте на каждый заказ:</p>
+      <div class="perks">
+        <span>✓ Скидка 10% на все заказы</span>
+        <span>✓ Бесплатная доставка всегда</span>
+      </div>
+      <form onsubmit="return false;">
+        <input type="text" id="mz-club-name" placeholder="Ваше имя">
+        <button type="button" id="mz-club-signup-btn" class="btn gold">Оформить карту</button>
+      </form>
+    </div>
+  </div>
+</section>
+
 <section class="about">
   <div class="wrap">
     <h2>О нас</h2>
@@ -195,8 +213,12 @@
     <button id="mz-cart-close" type="button">×</button>
   </div>
   <div id="mz-cart-list"></div>
+  <div id="mz-discount-row" class="cart-total-row" hidden><span>Скидка по клубной карте (10%)</span><span id="mz-discount-amount">0</span></div>
   <div id="mz-delivery-row" class="cart-total-row" hidden><span>Доставка<br><small id="mz-delivery-note" style="font-weight:400;color:var(--muted);"></small></span><span id="mz-delivery-fee">0</span></div>
   <div class="cart-total-row"><span>Итого</span><span><span id="mz-cart-total">0.00</span> <span id="mz-cart-currency"></span></span></div>
+  <div id="mz-club-card-section" hidden>
+    <input id="mz-club-card" type="text" placeholder="Номер клубной карты (если есть)">
+  </div>
   <div id="mz-gift-section" hidden>
     <label id="mz-gift-row" class="mz-gift-row">
       <input type="checkbox" id="mz-gift-checkbox">
@@ -232,6 +254,7 @@ window.MZ_CITIES = {
     freeDeliveryMinTotal: 42,
     deliveryFee: 5,
     giftPromo: true,
+    clubCard: true,
     messengers: [
       {type:"whatsapp", number:"995593482218", label:"WhatsApp"},
       {type:"telegram", username:"microzelen_batumi_DaNangvn", label:"Telegram"}
@@ -281,6 +304,7 @@ window.MZ_CITIES = {
 };
 window.MZ_CART_TEXT = {
   empty: "Корзина пуста",
+  clubNameRequired: "Введите ваше имя",
   orderTitle: "Новый заказ Microzelen",
   total: "Итого",
   address: "Адрес доставки",

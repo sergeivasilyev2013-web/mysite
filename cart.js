@@ -134,19 +134,34 @@
     return !!(meetsCount || meetsTotal);
   }
 
+  // Club card: a one-time 10 GEL purchase, checked on trust like the gift
+  // checkbox — there's no backend to actually verify a card number against,
+  // so the seller confirms it the same way they confirm payment for orders.
+  function hasClubCard() {
+    var c = city();
+    if (!c.clubCard) return false;
+    var el = document.getElementById("mz-club-card");
+    return !!(el && el.value.trim());
+  }
+
   function fmt(n) {
     return Number(n).toLocaleString(undefined, { maximumFractionDigits: 2 });
+  }
+
+  function discountedSubtotal() {
+    var sub = cartTotal();
+    return hasClubCard() ? sub * 0.9 : sub;
   }
 
   function deliveryFee() {
     var c = city();
     if (!c.deliveryFee || cartCount() === 0) return 0;
-    if (meetsPromoThreshold()) return 0;
+    if (hasClubCard() || meetsPromoThreshold()) return 0;
     return c.deliveryFee;
   }
 
   function grandTotal() {
-    return cartTotal() + deliveryFee();
+    return discountedSubtotal() + deliveryFee();
   }
 
   function renderBadge() {
@@ -252,10 +267,27 @@
       }
     }
 
+    var discountRow = document.getElementById("mz-discount-row");
+    if (discountRow) {
+      var withCard = hasClubCard();
+      discountRow.hidden = !withCard || cartCount() === 0;
+      if (withCard) {
+        var discountEl = document.getElementById("mz-discount-amount");
+        if (discountEl) discountEl.textContent = "-" + fmt(cartTotal() - discountedSubtotal()) + " " + (city().currency || "");
+      }
+    }
+
+    renderClubCardSection();
     renderGiftSection();
     renderMessengerSection();
     renderPaymentSection();
     updateCheckoutLabel();
+  }
+
+  function renderClubCardSection() {
+    var wrap = document.getElementById("mz-club-card-section");
+    if (!wrap) return;
+    wrap.hidden = !city().clubCard;
   }
 
   function renderGiftSection() {
@@ -586,6 +618,9 @@
       var q = e.target.value;
       searchDebounce = setTimeout(function () { searchAddress(q); }, 500);
     }
+    if (e.target && e.target.id === "mz-club-card") {
+      renderCartPanel();
+    }
   });
 
   function updateAddressPlaceholder() {
@@ -657,9 +692,13 @@
     });
     lines.push("");
     var fee = deliveryFee();
-    if (fee > 0) {
+    var withCard = hasClubCard();
+    if (fee > 0 || withCard) {
       lines.push(biLabel("subtotal") + ": " + fmt(cartTotal()) + " " + city().currency);
-      lines.push(biLabel("delivery") + ": " + fmt(fee) + " " + city().currency);
+      if (withCard) {
+        lines.push("Скидка по клубной карте (10%): -" + fmt(cartTotal() - discountedSubtotal()) + " " + city().currency);
+      }
+      lines.push(biLabel("delivery") + ": " + (fee > 0 ? fmt(fee) + " " + city().currency : (t.freeDelivery || "Free")));
     }
     lines.push(biLabel("total") + ": " + fmt(grandTotal()) + " " + city().currency);
     lines.push("");
@@ -679,6 +718,11 @@
     if (giftCheckbox && giftCheckbox.checked && !giftCheckbox.disabled) {
       lines.push("");
       lines.push("🎁 Клиент хочет подарочный бокс (акция, лоток ≤14 ₾ на ваш выбор)");
+    }
+    if (withCard) {
+      var cardInput = document.getElementById("mz-club-card");
+      lines.push("");
+      lines.push("💳 Клубная карта № " + cardInput.value.trim() + " — проверьте перед подтверждением");
     }
     return lines.join("\n");
   }
@@ -815,6 +859,23 @@
     }
   }
 
+  function submitClubSignup() {
+    var nameInput = document.getElementById("mz-club-name");
+    var name = nameInput ? nameInput.value.trim() : "";
+    if (!name) {
+      if (nameInput) nameInput.focus();
+      toast(t.clubNameRequired || "Please enter your name");
+      return;
+    }
+    var wa = cityMessengers().filter(function (m) { return m.type === "whatsapp"; })[0];
+    if (!wa) return;
+    var lines = [
+      "💳 Хочу клубную карту Microzelen (10 ₾, разово)",
+      "Имя: " + name
+    ];
+    window.open("https://wa.me/" + wa.number + "?text=" + encodeURIComponent(lines.join("\n")), "_blank");
+  }
+
   document.addEventListener("click", function (e) {
     var cardToggle = e.target.closest("[data-card-toggle]");
     if (cardToggle) {
@@ -903,6 +964,10 @@
     }
     if (e.target.closest("#mz-checkout-btn")) {
       submitOrder();
+      return;
+    }
+    if (e.target.closest("#mz-club-signup-btn")) {
+      submitClubSignup();
       return;
     }
     var copyBtn = e.target.closest(".mz-copy-iban");

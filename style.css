@@ -315,6 +315,89 @@ section.b2b p {
   color: var(--muted);
 }
 
+section.club {
+  padding: 32px 0;
+}
+
+section.club .inner {
+  background: #16321e;
+  color: #faf7ef;
+  border-radius: 16px;
+  padding: 36px 28px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+section.club .inner::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(201, 164, 92, 0.16), transparent 55%);
+  pointer-events: none;
+}
+
+section.club .kicker {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #c9a45c;
+  margin-bottom: 10px;
+}
+
+section.club h2 {
+  margin: 0 0 10px;
+  font-size: 1.4rem;
+  color: #ffffff;
+}
+
+section.club p {
+  max-width: 480px;
+  margin: 0 auto 20px;
+  color: rgba(250, 247, 239, 0.78);
+}
+
+section.club .perks {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px 22px;
+  margin-bottom: 22px;
+  font-size: 0.92rem;
+  color: #f0e6cf;
+}
+
+section.club form {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  position: relative;
+}
+
+section.club input[type="text"] {
+  padding: 12px 16px;
+  border-radius: 8px;
+  border: 1px solid rgba(250, 247, 239, 0.3);
+  background: rgba(255, 255, 255, 0.08);
+  color: #faf7ef;
+  font-size: 0.95rem;
+  min-width: 220px;
+}
+
+section.club input[type="text"]::placeholder {
+  color: rgba(250, 247, 239, 0.55);
+}
+
+section.club .btn.gold {
+  background: #c9a45c;
+  color: #16321e;
+  border: none;
+  font-weight: 700;
+}
+
 section.faq {
   padding: 16px 0 48px;
 }
@@ -655,7 +738,7 @@ section.catalog .price-note {
   font-size: 1rem;
 }
 
-#mz-address, #mz-company-id {
+#mz-address, #mz-company-id, #mz-club-card {
   width: 100%;
   padding: 10px 12px;
   border-radius: 8px;

@@ -125,6 +125,24 @@
   </div>
 </section>
 
+<section class="club">
+  <div class="wrap">
+    <div class="inner">
+      <span class="kicker">კლუბის ბარათი</span>
+      <h2>10 ₾ ერთხელ — ფასდაკლება სამუდამოდ</h2>
+      <p>გააფორმეთ Microzelen-ის კლუბის ბარათი ერთჯერადად 10 ₾-ად და მიიღეთ ყოველ შეკვეთაზე:</p>
+      <div class="perks">
+        <span>✓ 10% ფასდაკლება ყველა შეკვეთაზე</span>
+        <span>✓ ყოველთვის უფასო მიწოდება</span>
+      </div>
+      <form onsubmit="return false;">
+        <input type="text" id="mz-club-name" placeholder="თქვენი სახელი">
+        <button type="button" id="mz-club-signup-btn" class="btn gold">ბარათის გაფორმება</button>
+      </form>
+    </div>
+  </div>
+</section>
+
 <section class="about">
   <div class="wrap">
     <h2>ჩვენ შესახებ</h2>
@@ -190,8 +208,12 @@
     <button id="mz-cart-close" type="button">×</button>
   </div>
   <div id="mz-cart-list"></div>
+  <div id="mz-discount-row" class="cart-total-row" hidden><span>ფასდაკლება კლუბის ბარათით (10%)</span><span id="mz-discount-amount">0</span></div>
   <div id="mz-delivery-row" class="cart-total-row" hidden><span>მიწოდება<br><small id="mz-delivery-note" style="font-weight:400;color:var(--muted);"></small></span><span id="mz-delivery-fee">0</span></div>
   <div class="cart-total-row"><span>ჯამი</span><span><span id="mz-cart-total">0.00</span> <span id="mz-cart-currency"></span></span></div>
+  <div id="mz-club-card-section" hidden>
+    <input id="mz-club-card" type="text" placeholder="კლუბის ბარათის ნომერი (თუ გაქვთ)">
+  </div>
   <div id="mz-gift-section" hidden>
     <label id="mz-gift-row" class="mz-gift-row">
       <input type="checkbox" id="mz-gift-checkbox">
@@ -228,6 +250,7 @@ window.MZ_CITIES = {
     freeDeliveryMinTotal: 42,
     deliveryFee: 5,
     giftPromo: true,
+    clubCard: true,
     messengers: [
       {type:"whatsapp", number:"995593482218", label:"WhatsApp"},
       {type:"telegram", username:"microzelen_batumi_DaNangvn", label:"Telegram"}
@@ -257,6 +280,7 @@ window.MZ_CITIES = {
 };
 window.MZ_CART_TEXT = {
   empty: "კალათა ცარიელია",
+  clubNameRequired: "შეიყვანეთ თქვენი სახელი",
   orderTitle: "ახალი Microzelen შეკვეთა",
   total: "ჯამი",
   address: "მიწოდების მისამართი",
