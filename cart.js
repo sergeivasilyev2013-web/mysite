@@ -727,6 +727,71 @@
     return lines.join("\n");
   }
 
+  // Cloud copy of the order for the admin dashboard (admin.html). Firebase
+  // is optional progressive enhancement: if firebase-config.js hasn't been
+  // filled in yet (or the SDK failed to load), window.MZ_DB is undefined and
+  // this is a no-op — the WhatsApp/Telegram/Zalo flow above still works on
+  // its own, exactly as before this existed.
+  function buildOrderData(address) {
+    var c = city();
+    var items = Object.keys(cart).map(function (id) {
+      var p = productById(id);
+      if (!p) return null;
+      return {
+        name: p.nameRu || p.name,
+        qty: cart[id],
+        unit: p.unitRu || p.unit,
+        weight: isWeightItem(p),
+        lineTotal: lineTotal(p, cart[id])
+      };
+    }).filter(Boolean);
+    var pay = selectedPayment();
+    var m = selectedMessenger();
+    var giftCheckbox = document.getElementById("mz-gift-checkbox");
+    var cardInput = document.getElementById("mz-club-card");
+    var companyIdInput = document.getElementById("mz-company-id");
+    return {
+      lang: document.documentElement.lang || "ru",
+      cityId: activeCityId,
+      cityLabel: c.label || activeCityId,
+      items: items,
+      subtotal: cartTotal(),
+      discount: cartTotal() - discountedSubtotal(),
+      deliveryFee: deliveryFee(),
+      total: grandTotal(),
+      currency: c.currency || "",
+      address: address,
+      companyId: companyIdInput && companyIdInput.value.trim() ? companyIdInput.value.trim() : null,
+      payment: pay ? { bank: pay.bank, holder: pay.holder, iban: pay.iban } : null,
+      giftRequested: !!(giftCheckbox && giftCheckbox.checked && !giftCheckbox.disabled),
+      clubCard: hasClubCard() && cardInput ? cardInput.value.trim() : null,
+      messenger: m ? m.type : null
+    };
+  }
+
+  function saveOrderToCloud(address, text) {
+    if (!window.MZ_DB) return;
+    var data = buildOrderData(address);
+    data.rawText = text;
+    data.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+    window.MZ_DB.collection("orders").add(data).catch(function (err) {
+      console.warn("Microzelen: could not save order to the admin dashboard", err);
+    });
+  }
+
+  function saveClubSignupToCloud(name) {
+    if (!window.MZ_DB) return;
+    window.MZ_DB.collection("clubSignups").add({
+      name: name,
+      cityId: activeCityId,
+      cityLabel: city().label || activeCityId,
+      lang: document.documentElement.lang || "ru",
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    }).catch(function (err) {
+      console.warn("Microzelen: could not save club signup to the admin dashboard", err);
+    });
+  }
+
   function toast(msg) {
     var el = document.getElementById("mz-toast");
     if (!el) {
@@ -831,6 +896,8 @@
     var m = selectedMessenger();
     if (!m) return;
 
+    saveOrderToCloud(address, text);
+
     if (m.type === "whatsapp") {
       window.open("https://wa.me/" + m.number + "?text=" + encodeURIComponent(text), "_blank");
     } else if (m.type === "telegram") {
@@ -869,6 +936,7 @@
     }
     var wa = cityMessengers().filter(function (m) { return m.type === "whatsapp"; })[0];
     if (!wa) return;
+    saveClubSignupToCloud(name);
     var lines = [
       "💳 Хочу клубную карту Microzelen (10 ₾, разово)",
       "Имя: " + name

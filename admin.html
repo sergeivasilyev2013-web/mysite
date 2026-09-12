@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Microzelen — кабинет</title>
+<style>
+  :root {
+    --green: #2f6b3a;
+    --green-dark: #1f4a28;
+    --cream: #faf7ef;
+    --ink: #1c1c1c;
+    --muted: #6b6b6b;
+    --card: #ffffff;
+    --border: #e7e2d4;
+    --gold: #c9a45c;
+    --dark: #16321e;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    line-height: 1.5;
+  }
+  .wrap { max-width: 960px; margin: 0 auto; padding: 0 20px 60px; }
+
+  header.top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 0;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 24px;
+  }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.1rem; }
+  .brand .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--green); display: inline-block; }
+  #mz-who { font-size: 0.85rem; color: var(--muted); }
+  .btn {
+    display: inline-block;
+    padding: 9px 16px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: #fff;
+    color: var(--ink);
+    font-size: 0.9rem;
+    cursor: pointer;
+  }
+  .btn.gold { background: var(--gold); color: var(--dark); border: none; font-weight: 700; }
+
+  /* --- login screen --- */
+  #mz-login {
+    max-width: 360px;
+    margin: 80px auto;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 32px;
+  }
+  #mz-login h1 { font-size: 1.2rem; margin: 0 0 18px; }
+  #mz-login label { display: block; font-size: 0.85rem; color: var(--muted); margin: 14px 0 6px; }
+  #mz-login input {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    font-size: 0.95rem;
+  }
+  #mz-login button { width: 100%; margin-top: 20px; padding: 11px; }
+  #mz-login-error { color: #a63244; font-size: 0.85rem; margin-top: 10px; min-height: 1.2em; }
+
+  /* --- dashboard --- */
+  .stats { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 24px; }
+  .stat {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 20px;
+    min-width: 120px;
+  }
+  .stat .num { font-size: 1.5rem; font-weight: 700; color: var(--green-dark); }
+  .stat .label { font-size: 0.78rem; color: var(--muted); }
+
+  h2.section { font-size: 1.05rem; margin: 30px 0 14px; }
+
+  .order-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-bottom: 14px;
+  }
+  .order-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+  .order-time { font-size: 0.82rem; color: var(--muted); }
+  .order-city {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    background: rgba(47,107,58,0.1);
+    color: var(--green-dark);
+    padding: 3px 9px;
+    border-radius: 20px;
+  }
+  .order-items { font-size: 0.92rem; margin: 8px 0; }
+  .order-items div { padding: 2px 0; }
+  .order-money {
+    font-size: 0.88rem;
+    color: var(--muted);
+    border-top: 1px dashed var(--border);
+    padding-top: 8px;
+    margin-top: 8px;
+  }
+  .order-money strong { color: var(--ink); }
+  .order-flags { margin-top: 8px; display: flex; gap: 8px; flex-wrap: wrap; }
+  .flag {
+    font-size: 0.76rem;
+    padding: 3px 9px;
+    border-radius: 20px;
+    background: rgba(201,164,92,0.18);
+    color: #8a6a2b;
+  }
+  .order-addr { font-size: 0.88rem; margin-top: 8px; }
+  .order-toggle {
+    font-size: 0.78rem;
+    color: var(--green-dark);
+    cursor: pointer;
+    margin-top: 8px;
+    display: inline-block;
+  }
+  .order-raw {
+    white-space: pre-wrap;
+    font-size: 0.82rem;
+    background: var(--cream);
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin-top: 8px;
+    display: none;
+  }
+  .order-raw.open { display: block; }
+
+  .empty { color: var(--muted); font-size: 0.9rem; padding: 10px 0; }
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+
+<div id="mz-login">
+  <h1>Кабинет Microzelen</h1>
+  <label for="mz-email">Email</label>
+  <input type="email" id="mz-email" autocomplete="username">
+  <label for="mz-password">Пароль</label>
+  <input type="password" id="mz-password" autocomplete="current-password">
+  <button type="button" class="btn gold" id="mz-login-btn">Войти</button>
+  <div id="mz-login-error"></div>
+</div>
+
+<div class="wrap" id="mz-dashboard" hidden>
+  <header class="top">
+    <div class="brand"><span class="dot"></span> Microzelen — кабинет</div>
+    <div style="display:flex;align-items:center;gap:14px;">
+      <span id="mz-who"></span>
+      <button type="button" class="btn" id="mz-logout-btn">Выйти</button>
+    </div>
+  </header>
+
+  <div class="stats">
+    <div class="stat"><div class="num" id="mz-stat-orders">0</div><div class="label">заказов</div></div>
+    <div class="stat"><div class="num" id="mz-stat-total">0</div><div class="label">на сумму (все валюты)</div></div>
+    <div class="stat"><div class="num" id="mz-stat-cards">0</div><div class="label">заявок на карту</div></div>
+  </div>
+
+  <h2 class="section">Заказы</h2>
+  <div id="mz-orders-list"><p class="empty">Загрузка…</p></div>
+
+  <h2 class="section">Заявки на клубную карту</h2>
+  <div id="mz-signups-list"><p class="empty">Загрузка…</p></div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+<script src="firebase-config.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  if (!window.firebase || !window.MZ_DB) {
+    document.getElementById("mz-login-error").textContent =
+      "Firebase ещё не настроен (firebase-config.js). Заполните настоящие ключи проекта.";
+    return;
+  }
+
+  var auth = firebase.auth();
+  var db = window.MZ_DB;
+
+  function fmt(n) {
+    return Number(n || 0).toLocaleString("ru-RU", { maximumFractionDigits: 2 });
+  }
+
+  function fmtTime(ts) {
+    if (!ts || !ts.toDate) return "";
+    return ts.toDate().toLocaleString("ru-RU", { dateStyle: "medium", timeStyle: "short" });
+  }
+
+  document.getElementById("mz-login-btn").addEventListener("click", function () {
+    var email = document.getElementById("mz-email").value.trim();
+    var password = document.getElementById("mz-password").value;
+    var errEl = document.getElementById("mz-login-error");
+    errEl.textContent = "";
+    auth.signInWithEmailAndPassword(email, password).catch(function (err) {
+      errEl.textContent = "Не удалось войти: " + (err.message || err.code || "неизвестная ошибка");
+    });
+  });
+
+  document.getElementById("mz-password").addEventListener("keydown", function (e) {
+    if (e.key === "Enter") document.getElementById("mz-login-btn").click();
+  });
+
+  document.getElementById("mz-logout-btn").addEventListener("click", function () {
+    auth.signOut();
+  });
+
+  var unsubOrders = null, unsubSignups = null;
+
+  function renderOrders(snap) {
+    var list = document.getElementById("mz-orders-list");
+    document.getElementById("mz-stat-orders").textContent = snap.size;
+    var totalsByCurrency = {};
+    if (snap.empty) {
+      list.innerHTML = '<p class="empty">Пока нет заказов.</p>';
+    } else {
+      list.innerHTML = "";
+      snap.forEach(function (doc) {
+        var o = doc.data();
+        totalsByCurrency[o.currency || ""] = (totalsByCurrency[o.currency || ""] || 0) + (o.total || 0);
+
+        var card = document.createElement("div");
+        card.className = "order-card";
+
+        var itemsHtml = (o.items || []).map(function (it) {
+          var qty = it.weight ? it.qty + " " + it.unit : "×" + it.qty + " " + (it.unit || "");
+          return '<div>' + it.name + " " + qty + " — " + fmt(it.lineTotal) + " " + (o.currency || "") + "</div>";
+        }).join("");
+
+        var flags = [];
+        if (o.giftRequested) flags.push('<span class="flag">🎁 подарочный бокс</span>');
+        if (o.clubCard) flags.push('<span class="flag">💳 карта № ' + o.clubCard + '</span>');
+        if (o.discount) flags.push('<span class="flag">скидка -' + fmt(o.discount) + " " + (o.currency || "") + '</span>');
+
+        card.innerHTML =
+          '<div class="order-head">' +
+            '<span class="order-time">' + fmtTime(o.createdAt) + '</span>' +
+            '<span class="order-city">' + (o.cityLabel || o.cityId || "") + '</span>' +
+          '</div>' +
+          '<div class="order-items">' + itemsHtml + '</div>' +
+          '<div class="order-money">' +
+            'Товары: ' + fmt(o.subtotal) + ' ' + (o.currency || "") +
+            (o.deliveryFee ? ' · Доставка: ' + fmt(o.deliveryFee) + ' ' + (o.currency || "") : ' · Доставка бесплатно') +
+            ' · <strong>Итого: ' + fmt(o.total) + ' ' + (o.currency || "") + '</strong>' +
+          '</div>' +
+          (flags.length ? '<div class="order-flags">' + flags.join("") + '</div>' : '') +
+          '<div class="order-addr">📍 ' + (o.address || "") + (o.companyId ? ' · ID: ' + o.companyId : '') + '</div>' +
+          (o.payment ? '<div class="order-addr">💰 ' + o.payment.bank + ' — ' + o.payment.holder + ' — ' + o.payment.iban + '</div>' : '') +
+          '<span class="order-toggle" data-toggle>Показать текст заказа ▾</span>' +
+          '<div class="order-raw">' + (o.rawText || "").replace(/</g, "&lt;") + '</div>';
+
+        card.querySelector("[data-toggle]").addEventListener("click", function (e) {
+          var raw = card.querySelector(".order-raw");
+          raw.classList.toggle("open");
+          e.target.textContent = raw.classList.contains("open") ? "Скрыть текст заказа ▴" : "Показать текст заказа ▾";
+        });
+
+        list.appendChild(card);
+      });
+    }
+    var totalStr = Object.keys(totalsByCurrency).map(function (cur) {
+      return fmt(totalsByCurrency[cur]) + " " + cur;
+    }).join(", ") || "0";
+    document.getElementById("mz-stat-total").textContent = totalStr;
+  }
+
+  function renderSignups(snap) {
+    var list = document.getElementById("mz-signups-list");
+    document.getElementById("mz-stat-cards").textContent = snap.size;
+    if (snap.empty) {
+      list.innerHTML = '<p class="empty">Пока нет заявок.</p>';
+      return;
+    }
+    list.innerHTML = "";
+    snap.forEach(function (doc) {
+      var s = doc.data();
+      var card = document.createElement("div");
+      card.className = "order-card";
+      card.innerHTML =
+        '<div class="order-head">' +
+          '<span class="order-time">' + fmtTime(s.createdAt) + '</span>' +
+          '<span class="order-city">' + (s.cityLabel || s.cityId || "") + '</span>' +
+        '</div>' +
+        '<div class="order-items"><strong>' + (s.name || "") + '</strong></div>';
+      list.appendChild(card);
+    });
+  }
+
+  auth.onAuthStateChanged(function (user) {
+    document.getElementById("mz-login").hidden = !!user;
+    document.getElementById("mz-dashboard").hidden = !user;
+    if (unsubOrders) { unsubOrders(); unsubOrders = null; }
+    if (unsubSignups) { unsubSignups(); unsubSignups = null; }
+    if (!user) return;
+
+    document.getElementById("mz-who").textContent = user.email;
+    unsubOrders = db.collection("orders").orderBy("createdAt", "desc").limit(200)
+      .onSnapshot(renderOrders, function (err) {
+        document.getElementById("mz-orders-list").innerHTML =
+          '<p class="empty">Ошибка доступа: ' + err.message + '</p>';
+      });
+    unsubSignups = db.collection("clubSignups").orderBy("createdAt", "desc").limit(200)
+      .onSnapshot(renderSignups, function (err) {
+        document.getElementById("mz-signups-list").innerHTML =
+          '<p class="empty">Ошибка доступа: ' + err.message + '</p>';
+      });
+  });
+})();
+</script>
+</body>
+</html>
