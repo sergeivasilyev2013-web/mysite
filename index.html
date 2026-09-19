@@ -2,10 +2,14 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta http-equiv="refresh" content="0; url=ru.html">
 <title>Microzelen</title>
 <meta name="description" content="Живая микрозелень на корню для ресторанов и кафе в Батуми и Дананге. Официальная накладная rs.ge на каждую поставку.">
 <link rel="canonical" href="https://sergeivasilyev2013-web.github.io/mysite/">
+<link rel="alternate" hreflang="ru" href="https://sergeivasilyev2013-web.github.io/mysite/ru.html">
+<link rel="alternate" hreflang="en" href="https://sergeivasilyev2013-web.github.io/mysite/en.html">
+<link rel="alternate" hreflang="ka" href="https://sergeivasilyev2013-web.github.io/mysite/ka.html">
+<link rel="alternate" hreflang="vi" href="https://sergeivasilyev2013-web.github.io/mysite/vi.html">
+<link rel="alternate" hreflang="x-default" href="https://sergeivasilyev2013-web.github.io/mysite/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Microzelen">
 <meta property="og:locale" content="ru_RU">
@@ -27,5 +31,26 @@
     <a href="ka.html">ქართული</a> ·
     <a href="vi.html">Tiếng Việt</a>
   </p>
+  <script>
+    // Redirect by browser language instead of always forcing Russian, so
+    // English/Georgian/Vietnamese visitors land on their own page. Anyone
+    // without JS (or a crawler that doesn't run it) just sees the picker
+    // above instead of being stuck — a real fallback, not a dead link.
+    (function () {
+      var langs = (navigator.languages || [navigator.language || ""]).map(function (l) {
+        return l.toLowerCase();
+      });
+      var supported = ["ru", "ka", "vi", "en"];
+      for (var i = 0; i < langs.length; i++) {
+        for (var j = 0; j < supported.length; j++) {
+          if (langs[i].indexOf(supported[j]) === 0) {
+            window.location.replace(supported[j] + ".html");
+            return;
+          }
+        }
+      }
+      window.location.replace("en.html");
+    })();
+  </script>
 </body>
 </html>

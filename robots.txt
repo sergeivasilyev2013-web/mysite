@@ -1,0 +1,5 @@
+User-agent: *
+Disallow: /admin.html
+Allow: /
+
+Sitemap: https://sergeivasilyev2013-web.github.io/mysite/sitemap.xml
