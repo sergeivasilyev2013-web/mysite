@@ -212,6 +212,18 @@
     return ts.toDate().toLocaleString("ru-RU", { dateStyle: "medium", timeStyle: "short" });
   }
 
+  // Every order/signup document is readable here only by the owner, but it's
+  // writable by anyone holding the site's (public, by design) Firebase config
+  // — Firestore's create rule checks which fields are present, not what's in
+  // them. So every string field below is untrusted and must be escaped
+  // before going into innerHTML, or a crafted order could run script in this
+  // authenticated admin session.
+  function esc(s) {
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+
   document.getElementById("mz-login-btn").addEventListener("click", function () {
     var email = document.getElementById("mz-email").value.trim();
     var password = document.getElementById("mz-password").value;
@@ -248,31 +260,31 @@
         card.className = "order-card";
 
         var itemsHtml = (o.items || []).map(function (it) {
-          var qty = it.weight ? it.qty + " " + it.unit : "×" + it.qty + " " + (it.unit || "");
-          return '<div>' + it.name + " " + qty + " — " + fmt(it.lineTotal) + " " + (o.currency || "") + "</div>";
+          var qty = it.weight ? esc(it.qty) + " " + esc(it.unit) : "×" + esc(it.qty) + " " + esc(it.unit || "");
+          return '<div>' + esc(it.name) + " " + qty + " — " + fmt(it.lineTotal) + " " + esc(o.currency || "") + "</div>";
         }).join("");
 
         var flags = [];
         if (o.giftRequested) flags.push('<span class="flag">🎁 подарочный бокс</span>');
-        if (o.clubCard) flags.push('<span class="flag">💳 карта № ' + o.clubCard + '</span>');
-        if (o.discount) flags.push('<span class="flag">скидка -' + fmt(o.discount) + " " + (o.currency || "") + '</span>');
+        if (o.clubCard) flags.push('<span class="flag">💳 карта № ' + esc(o.clubCard) + '</span>');
+        if (o.discount) flags.push('<span class="flag">скидка -' + fmt(o.discount) + " " + esc(o.currency || "") + '</span>');
 
         card.innerHTML =
           '<div class="order-head">' +
-            '<span class="order-time">' + fmtTime(o.createdAt) + '</span>' +
-            '<span class="order-city">' + (o.cityLabel || o.cityId || "") + '</span>' +
+            '<span class="order-time">' + esc(fmtTime(o.createdAt)) + '</span>' +
+            '<span class="order-city">' + esc(o.cityLabel || o.cityId || "") + '</span>' +
           '</div>' +
           '<div class="order-items">' + itemsHtml + '</div>' +
           '<div class="order-money">' +
-            'Товары: ' + fmt(o.subtotal) + ' ' + (o.currency || "") +
-            (o.deliveryFee ? ' · Доставка: ' + fmt(o.deliveryFee) + ' ' + (o.currency || "") : ' · Доставка бесплатно') +
-            ' · <strong>Итого: ' + fmt(o.total) + ' ' + (o.currency || "") + '</strong>' +
+            'Товары: ' + fmt(o.subtotal) + ' ' + esc(o.currency || "") +
+            (o.deliveryFee ? ' · Доставка: ' + fmt(o.deliveryFee) + ' ' + esc(o.currency || "") : ' · Доставка бесплатно') +
+            ' · <strong>Итого: ' + fmt(o.total) + ' ' + esc(o.currency || "") + '</strong>' +
           '</div>' +
           (flags.length ? '<div class="order-flags">' + flags.join("") + '</div>' : '') +
-          '<div class="order-addr">📍 ' + (o.address || "") + (o.companyId ? ' · ID: ' + o.companyId : '') + '</div>' +
-          (o.payment ? '<div class="order-addr">💰 ' + o.payment.bank + ' — ' + o.payment.holder + ' — ' + o.payment.iban + '</div>' : '') +
+          '<div class="order-addr">📍 ' + esc(o.address || "") + (o.companyId ? ' · ID: ' + esc(o.companyId) : '') + '</div>' +
+          (o.payment ? '<div class="order-addr">💰 ' + esc(o.payment.bank) + ' — ' + esc(o.payment.holder) + ' — ' + esc(o.payment.iban) + '</div>' : '') +
           '<span class="order-toggle" data-toggle>Показать текст заказа ▾</span>' +
-          '<div class="order-raw">' + (o.rawText || "").replace(/</g, "&lt;") + '</div>';
+          '<div class="order-raw">' + esc(o.rawText || "") + '</div>';
 
         card.querySelector("[data-toggle]").addEventListener("click", function (e) {
           var raw = card.querySelector(".order-raw");
@@ -303,10 +315,10 @@
       card.className = "order-card";
       card.innerHTML =
         '<div class="order-head">' +
-          '<span class="order-time">' + fmtTime(s.createdAt) + '</span>' +
-          '<span class="order-city">' + (s.cityLabel || s.cityId || "") + '</span>' +
+          '<span class="order-time">' + esc(fmtTime(s.createdAt)) + '</span>' +
+          '<span class="order-city">' + esc(s.cityLabel || s.cityId || "") + '</span>' +
         '</div>' +
-        '<div class="order-items"><strong>' + (s.name || "") + '</strong></div>';
+        '<div class="order-items"><strong>' + esc(s.name || "") + '</strong></div>';
       list.appendChild(card);
     });
   }
